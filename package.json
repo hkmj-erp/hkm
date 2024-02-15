@@ -14,6 +14,6 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/nrhdasa/hkm#readme",
   "dependencies": {
-    "node-thermal-printer": "^4.4.0"
+    "node-thermal-printer": "^4.4.2"
   }
 }

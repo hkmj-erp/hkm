@@ -14,10 +14,10 @@ iconv-lite@0.5.0:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-node-thermal-printer@^4.4.0:
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/node-thermal-printer/-/node-thermal-printer-4.4.1.tgz#418c0286d249b24b8a91e78ca9398b3a7573213c"
-  integrity sha512-aHZ7DaajCs725+7JWoAMRBlEMQB4NBKsvI/+y/0wxwhkpPlAjZl/PPzQgft3hHLiuQKkMMwnfoP94sFmKXUY0g==
+node-thermal-printer@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/node-thermal-printer/-/node-thermal-printer-4.4.2.tgz#ae63df5154fd98b167a83687ba01fda29722554c"
+  integrity sha512-6AR2wx1M6R2bAIHCWJdI+kc2A/nTjKcrsdoK+sAR7HB4SlrcD8e6Y7r2COXOnTKXeoIIgKfSZldSvAx7+wF1sA==
   dependencies:
     iconv-lite "0.5.0"
     pngjs "3.3.3"
