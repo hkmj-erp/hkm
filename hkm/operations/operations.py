@@ -1,5 +1,6 @@
 import json
 import re
+from dhananjaya.dhananjaya.api.v3.marketing.identify import identify_donor
 import frappe
 from datetime import date
 from frappe import enqueue
@@ -7,6 +8,44 @@ from frappe.utils.nestedset import get_descendants_of
 from frappe.utils import add_to_date, now
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+import calendar
+
+
+def import_special_pujas():
+    for idx, d in enumerate(frappe.get_all("Temp Data", fields="*")):
+        if d["value_set"]:
+            continue
+        if not d["occasion"]:
+            continue
+        print(f"Processing {idx}")
+        if len(d["mobile"]) < 15:
+            clean_contact = re.sub(r"\D", "", d["mobile"])
+            clean_contact = clean_contact[-10:]
+        else:
+            contacts = []
+            # if " " in d["mobile"]:
+            #     contacts = d["mobile"].split(" ")
+            # for contact in contacts:
+            clean_contact = re.sub(r"\D", "", d["mobile"])[:10]
+            print(clean_contact)
+            donor = identify_donor(
+                contact=clean_contact, email=None, pan=None, aadhar=None
+            )
+            if donor:
+                donor = frappe.get_doc("Donor", donor)
+                donor.append(
+                    "puja_details",
+                    {
+                        "day": d["day"],
+                        "month": calendar.month_name[int(d["month"])],
+                        "occasion": d["occasion"],
+                    },
+                )
+                print(f"Saving Donor{donor.name}")
+                donor.save()
+                frappe.db.set_value("Temp Data", d["name"], "value_set", 1)
+                # break
+        frappe.db.commit()
 
 
 def create_seva_type():
