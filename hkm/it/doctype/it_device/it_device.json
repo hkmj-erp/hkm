@@ -23,7 +23,9 @@
   "name1",
   "column_break_rlfr",
   "age",
-  "bill"
+  "bill",
+  "username",
+  "password"
  ],
  "fields": [
   {
@@ -68,7 +70,8 @@
   },
   {
    "fieldname": "section_break_6",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "User Details"
   },
   {
    "fieldname": "it_user",
@@ -122,11 +125,21 @@
   {
    "fieldname": "column_break_rlfr",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "username",
+   "fieldtype": "Data",
+   "label": "Username"
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Data",
+   "label": "Password"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-19 20:49:26.780495",
+ "modified": "2024-02-27 14:23:02.925357",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT Device",

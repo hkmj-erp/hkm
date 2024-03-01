@@ -26,7 +26,9 @@ class ITDevice(Document):
 		model: DF.Data | None
 		name1: DF.Data | None
 		naming_series: DF.Literal["ITD-.YY.-"]
+		password: DF.Data | None
 		purchase_date: DF.Date | None
 		specifications: DF.Table[ITDeviceSpecification]
+		username: DF.Data | None
 	# end: auto-generated types
 	pass

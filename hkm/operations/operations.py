@@ -11,6 +11,12 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 import calendar
 
 
+def ahmd_mobile_clean():
+    frappe.db.sql("Donor Contact")
+
+    
+
+
 def import_special_pujas():
     for idx, d in enumerate(frappe.get_all("Temp Data", fields="*")):
         if d["value_set"]:
