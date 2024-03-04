@@ -21,11 +21,13 @@ class ITDevice(Document):
 		brand: DF.Link | None
 		category: DF.Link | None
 		company: DF.Link
+		image: DF.AttachImage | None
 		it_user: DF.Link | None
 		location: DF.Data | None
 		model: DF.Data | None
 		name1: DF.Data | None
 		naming_series: DF.Literal["ITD-.YY.-"]
+		password: DF.Data | None
 		purchase_date: DF.Date | None
 		specifications: DF.Table[ITDeviceSpecification]
 	# end: auto-generated types

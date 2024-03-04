@@ -19,11 +19,13 @@
   "specifications",
   "section_break_6",
   "it_user",
-  "location",
+  "password",
   "name1",
   "column_break_rlfr",
+  "location",
   "age",
-  "bill"
+  "bill",
+  "image"
  ],
  "fields": [
   {
@@ -122,11 +124,22 @@
   {
    "fieldname": "column_break_rlfr",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image"
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Data",
+   "label": "Password"
   }
  ],
+ "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-19 20:49:26.780495",
+ "modified": "2024-02-27 14:26:19.691374",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT Device",
