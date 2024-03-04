@@ -4,26 +4,26 @@
 ### This file has to be dynamically changed everytime, we need to send some customisations to other sites.
 
 custom_fixtures = [
-    "Workflow Action Master",
-    "Workflow State",
-    "Role",
-    {
-        "dt": "Workflow",
-        "filters": [
-            ["is_active", "=", 1],
-            [
-                "document_type",
-                "in",
-                [
-                    "Donation Receipt",
-                    "Item Creation Request",
-                    "Supplier Creation Request",
-                    "Purchase Order",
-                    "Donor ECS Creation Request",
-                ],
-            ],
-        ],
-    },
+    # "Workflow Action Master",
+    # "Workflow State",
+    # "Role",
+    # {
+    #     "dt": "Workflow",
+    #     "filters": [
+    #         ["is_active", "=", 1],
+    #         [
+    #             "document_type",
+    #             "in",
+    #             [
+    #                 "Donation Receipt",
+    #                 "Item Creation Request",
+    #                 "Supplier Creation Request",
+    #                 "Purchase Order",
+    #                 "Donor ECS Creation Request",
+    #             ],
+    #         ],
+    #     ],
+    # },
     {
         "dt": "Custom Field",
         "filters": [
@@ -31,32 +31,34 @@ custom_fixtures = [
                 "dt",
                 "in",
                 [
-                    "Material Request",
-                    "Purchase Order",
-                    "Purchase Receipt",
-                    "Purchase Invoice",
-                    "Journal Entry",
-                    "Customer",
-                    "Supplier",
+                    # "Material Request",
+                    # "Purchase Order",
+                    # "Purchase Receipt",
+                    # "Purchase Invoice",
+                    # "Journal Entry",
+                    # "Customer",
+                    "Asset"
+                    # "Supplier",
                 ],
             ],
         ],
     },
-    {
-        "dt": "Property Setter",
-        "filters": [
-            [
-                "doc_type",
-                "in",
-                [
-                    "Material Request",
-                    "Purchase Order",
-                    "Purchase Receipt",
-                    "Purchase Invoice",
-                ],
-            ],
-        ],
-    },
+    # {
+    #     "dt": "Property Setter",
+    #     "filters": [
+    #         [
+    #             "doc_type",
+    #             "in",
+    #             [
+    #                 "Material Request",
+    #                 "Purchase Order",
+    #                 "Purchase Receipt",
+    #                 "Purchase Invoice",
+    #                 "Bank Transaction",
+    #             ],
+    #         ],
+    #     ],
+    # },
     # {
     #     "dt": "Custom DocPerm",
     #     "filters": [
@@ -69,6 +71,6 @@ custom_fixtures = [
     #         ],
     #     ],
     # },
-    "Custom DocPerm",
-    "DJ Mode of Payment",
+    # "Custom DocPerm",
+    # "DJ Mode of Payment",
 ]

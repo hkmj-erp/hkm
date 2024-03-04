@@ -1,12 +1,14 @@
 ﻿import frappe, re
 from datetime import date
 from frappe.utils.background_jobs import enqueue
-from frappe.workflow.doctype.workflow_action.workflow_action import get_doc_workflow_state
+from frappe.workflow.doctype.workflow_action.workflow_action import (
+    get_doc_workflow_state,
+)
 
 from hkm.erpnext___custom.po_approval.mail_template import message_str
 
 
-def check_alm(self, method = None):
+def check_alm(self, method=None):
     if hasattr(self, "department") and self.department == "":
         frappe.throw("Department is not set.")
     update_alm_data(self)
@@ -16,11 +18,22 @@ def check_alm(self, method = None):
 
 def update_alm_data(doc):
     alm = get_alm(doc)
-
     if alm is not None:
-        frappe.db.set_value("Purchase Order", doc.name, "recommended_by", alm["recommender"])
-        frappe.db.set_value("Purchase Order", doc.name, "first_approving_authority", alm["first_approver"])
-        frappe.db.set_value("Purchase Order", doc.name, "final_approving_authority", alm["final_approver"])
+        frappe.db.set_value(
+            "Purchase Order", doc.name, "recommended_by", alm["recommender"]
+        )
+        frappe.db.set_value(
+            "Purchase Order",
+            doc.name,
+            "first_approving_authority",
+            alm["first_approver"],
+        )
+        frappe.db.set_value(
+            "Purchase Order",
+            doc.name,
+            "final_approving_authority",
+            alm["final_approver"],
+        )
         frappe.db.commit()
         return
 
@@ -47,6 +60,7 @@ def get_alm(doc):
 						select *
 						from `tabALM Level` alml
 						where alml.parent = '{}' and alml.department = '{}'
+                        order by alml.idx
 						""".format(
                 alm["name"], doc.department
             ),
@@ -78,12 +92,19 @@ def assign_and_notify_next_authority(doc):
     user = None
     current_state = doc.workflow_state
     states = ("Checked", "Recommended", "First Level Approved")
-    approvers = ("recommended_by", "first_approving_authority", "final_approving_authority")
+    approvers = (
+        "recommended_by",
+        "first_approving_authority",
+        "final_approving_authority",
+    )
     if current_state in states:
         for i, state in enumerate(states):
             if current_state == state:
                 for approver in approvers[i : len(approvers)]:
-                    if getattr(doc, approver) is not None and getattr(doc, approver) != "":
+                    if (
+                        getattr(doc, approver) is not None
+                        and getattr(doc, approver) != ""
+                    ):
                         user = getattr(doc, approver)
                         break
                 break
@@ -120,7 +141,9 @@ def assign(doc, user):
     email_args = {
         "recipients": [user],
         "message": message,
-        "subject": "#PO :{} Approval".format(doc.name),  # .format(self.start_date, self.end_date),
+        "subject": "#PO :{} Approval".format(
+            doc.name
+        ),  # .format(self.start_date, self.end_date),
         # "attachments": [frappe.attach_print(doc.doctype, doc.name, file_name=doc.name)],
         "reference_doctype": doc.doctype,
         "reference_name": doc.name,
@@ -128,7 +151,9 @@ def assign(doc, user):
         "delayed": False,
         "sender": doc.owner,
     }
-    enqueue(method=frappe.sendmail, queue="short", timeout=300, is_async=True, **email_args)
+    enqueue(
+        method=frappe.sendmail, queue="short", timeout=300, is_async=True, **email_args
+    )
     return
 
 

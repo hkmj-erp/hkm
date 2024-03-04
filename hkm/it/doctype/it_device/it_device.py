@@ -30,5 +30,6 @@ class ITDevice(Document):
 		password: DF.Data | None
 		purchase_date: DF.Date | None
 		specifications: DF.Table[ITDeviceSpecification]
+		username: DF.Data | None
 	# end: auto-generated types
 	pass
