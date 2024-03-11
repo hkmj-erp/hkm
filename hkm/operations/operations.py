@@ -11,10 +11,29 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 import calendar
 
 
+def notifiy_users_of_new_version():
+    users = frappe.get_all(
+        "Firebase App Token", filters={"app": "Dhananjaya"}, pluck="user"
+    )
+    users = list(set(users))
+    for user in users:
+        message = f"""Starting soon, we're switching to OTP login for simplicity.\n\nRemember, your registered email is {user}\n\nMake sure you have access to it for OTPs.\n\nNext App Update will be released on 12th March | 07:00 PM.
+                    """
+        doc = frappe.get_doc(
+            {
+                "doctype": "App Notification",
+                "app": "Dhananjaya",
+                "user": user,
+                "subject": "Important Update!",
+                "message": message,
+            }
+        )
+        doc.insert(ignore_permissions=True)
+    frappe.db.commit()
+
+
 def ahmd_mobile_clean():
     frappe.db.sql("Donor Contact")
-
-    
 
 
 def import_special_pujas():

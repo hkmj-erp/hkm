@@ -1,7 +1,8 @@
 from hkm.erpnext___custom.doctype.whatsapp_settings.whatsapp_settings import (
     send_whatsapp_using_template,
 )
-import frappe
+from frappe.core.doctype.sms_settings.sms_settings import send_sms
+import frappe, re
 import random
 import string
 
@@ -13,11 +14,18 @@ def random_string_generator(str_size, allowed_chars):
 
 
 @frappe.whitelist(allow_guest=True)
-def generate_otp(email):
-    email = email.strip()
-    if not frappe.db.exists("User", email):
-        frappe.throw("No User exists with this Email")
-    user = frappe.get_doc("User", email)
+def generate_otp(mobile=None, email=None):
+    if mobile:
+        mobile = re.sub(r"\D", "", mobile)[-10:]
+        if not frappe.db.exists("User", {"mobile_no": mobile}):
+            frappe.throw("No User exists with this Mobile Number")
+        user = frappe.get_doc("User", {"mobile_no": mobile})
+        email = user.email
+    else:
+        email = email.strip()
+        if not frappe.db.exists("User", email):
+            frappe.throw("No User exists with this Email")
+        user = frappe.get_doc("User", email)
     phone = user.mobile_no
     key = f"{REDIS_PREFIX}:{email}"
     otp = None
@@ -28,14 +36,19 @@ def generate_otp(email):
         frappe.cache().set(key, otp, ex=600)
     send_otp_on_email(email, otp)
     if phone:
-        parameters = [
-            {"type": "text", "text": otp},
-            {"type": "text", "text": "Dhananjaya"},
-        ]
-        resp = send_whatsapp_using_template(
-            phone, "mobile_app_authentication", parameters
-        )
-        print(resp)
+        ## Send WhatsApp
+        # parameters = [
+        #     {"type": "text", "text": otp},
+        #     {"type": "text", "text": "Dhananjaya"},
+        # ]
+        # resp = send_whatsapp_using_template(
+        #     phone, "mobile_app_authentication", parameters
+        # )
+
+        ## Send SMS
+        message = f"Hare Krishna Dear {user.full_name}, Your OTP for login is {otp}."
+        send_sms(receiver_list=[phone], msg=message)
+
     return
 
 
@@ -49,18 +62,25 @@ def send_otp_on_email(email, otp):
 
 
 @frappe.whitelist(allow_guest=True)
-def verify_otp(email, otp):
+def verify_otp(otp, email=None, mobile=None):
+    user = None
+    if mobile:
+        user = frappe.get_doc("User", {"mobile_no": mobile})
+        email = user.name
+        frappe.errprint(email)
     key = f"{REDIS_PREFIX}:{email}"
     if not frappe.cache().get(key):
         frappe.throw("No OTP Sent or Expired.")
 
     stored_otp = frappe.cache().get(key).decode("utf-8")
+
     if not stored_otp == otp:
         frappe.throw("Incorrect OTP")
     try:
-        user = frappe.db.get("User", email)
+        if user is None:
+            user = frappe.db.get("User", email)
         frappe.cache().delete(key)
-        return generate_key(user)
+        return generate_key(user.name)
     except Exception as e:
         frappe.throw("User not found.")
 
