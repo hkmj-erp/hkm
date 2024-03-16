@@ -24,25 +24,25 @@ custom_fixtures = [
     #         ],
     #     ],
     # },
-    {
-        "dt": "Custom Field",
-        "filters": [
-            [
-                "dt",
-                "in",
-                [
-                    # "Material Request",
-                    # "Purchase Order",
-                    # "Purchase Receipt",
-                    # "Purchase Invoice",
-                    # "Journal Entry",
-                    # "Customer",
-                    "Asset"
-                    # "Supplier",
-                ],
-            ],
-        ],
-    },
+    # {
+    #     "dt": "Custom Field",
+    #     "filters": [
+    #         [
+    #             "dt",
+    #             "in",
+    #             [
+    #                 # "Material Request",
+    #                 # "Purchase Order",
+    #                 # "Purchase Receipt",
+    #                 # "Purchase Invoice",
+    #                 # "Journal Entry",
+    #                 # "Customer",
+    #                 "Asset"
+    #                 # "Supplier",
+    #             ],
+    #         ],
+    #     ],
+    # },
     # {
     #     "dt": "Property Setter",
     #     "filters": [

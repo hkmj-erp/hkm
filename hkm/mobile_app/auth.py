@@ -1,3 +1,4 @@
+from hkm.mobile_app.test import TEST_EMAIL, TEST_OTP
 from hkm.erpnext___custom.doctype.whatsapp_settings.whatsapp_settings import (
     send_whatsapp_using_template,
 )
@@ -32,7 +33,10 @@ def generate_otp(mobile=None, email=None):
     if frappe.cache().get(key):
         otp = frappe.cache().get(key).decode("utf-8")
     else:
-        otp = random_string_generator(6, string.digits)
+        if email == TEST_EMAIL:
+            otp = TEST_OTP
+        else:
+            otp = random_string_generator(6, string.digits)
         frappe.cache().set(key, otp, ex=600)
     send_otp_on_email(email, otp)
     if phone:
@@ -68,18 +72,24 @@ def verify_otp(otp, email=None, mobile=None):
         user = frappe.get_doc("User", {"mobile_no": mobile})
         email = user.name
         frappe.errprint(email)
-    key = f"{REDIS_PREFIX}:{email}"
-    if not frappe.cache().get(key):
-        frappe.throw("No OTP Sent or Expired.")
 
-    stored_otp = frappe.cache().get(key).decode("utf-8")
+    stored_otp = None
+    if email == TEST_EMAIL:
+        stored_otp = TEST_OTP
+    else:
+        key = f"{REDIS_PREFIX}:{email}"
+        if not frappe.cache().get(key):
+            frappe.throw("No OTP Sent or Expired.")
+
+        stored_otp = frappe.cache().get(key).decode("utf-8")
 
     if not stored_otp == otp:
         frappe.throw("Incorrect OTP")
     try:
         if user is None:
             user = frappe.db.get("User", email)
-        frappe.cache().delete(key)
+        if email != TEST_EMAIL:
+            frappe.cache().delete(key)
         return generate_key(user.name)
     except Exception as e:
         frappe.throw("User not found.")
