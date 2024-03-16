@@ -65,7 +65,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-15 15:28:09.228947",
+ "modified": "2024-03-14 14:56:46.155356",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT User",
@@ -97,7 +97,7 @@
    "write": 1
   }
  ],
- "search_fields": "name1",
+ "search_fields": "name1, email, frappe_user, mobile",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
