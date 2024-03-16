@@ -8,3 +8,4 @@ hkm/public/dist
 hkm/fixtures
 hkm/operations
 hkm/operations/operations.py
+hkm/mobile_app/test.py
