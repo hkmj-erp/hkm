@@ -36,6 +36,8 @@
   {
    "fieldname": "device_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Device Name"
   },
   {
@@ -47,7 +49,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-18 12:04:41.899410",
+ "modified": "2024-03-04 11:55:32.981433",
  "modified_by": "Administrator",
  "module": "Firebase",
  "name": "Firebase App Token",
