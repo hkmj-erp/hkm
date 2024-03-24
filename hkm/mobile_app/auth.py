@@ -1,7 +1,4 @@
 from hkm.mobile_app.test import TEST_EMAIL, TEST_OTP
-from hkm.erpnext___custom.doctype.whatsapp_settings.whatsapp_settings import (
-    send_whatsapp_using_template,
-)
 from frappe.core.doctype.sms_settings.sms_settings import send_sms
 import frappe, re
 import random
