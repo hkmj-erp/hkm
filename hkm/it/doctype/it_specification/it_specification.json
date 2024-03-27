@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "format:{name1} ({unit_of_measure})",
  "creation": "2021-05-02 16:12:37.740867",
  "doctype": "DocType",
@@ -30,7 +31,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-18 17:53:48.965904",
+ "modified": "2024-02-15 16:30:12.698190",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT Specification",

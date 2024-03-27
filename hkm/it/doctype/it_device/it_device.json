@@ -1,21 +1,31 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2021-05-02 17:23:53.406038",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "details_section",
   "naming_series",
-  "company",
-  "category",
   "brand",
   "model",
+  "column_break_qlei",
+  "company",
+  "category",
+  "purchase_date",
   "section_break_4",
   "specifications",
   "section_break_6",
   "it_user",
-  "name1"
+  "location",
+  "name1",
+  "column_break_rlfr",
+  "age",
+  "bill",
+  "username",
+  "password"
  ],
  "fields": [
   {
@@ -49,7 +59,8 @@
   },
   {
    "fieldname": "section_break_4",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Specifications"
   },
   {
    "fieldname": "specifications",
@@ -59,7 +70,8 @@
   },
   {
    "fieldname": "section_break_6",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "User Details"
   },
   {
    "fieldname": "it_user",
@@ -80,11 +92,54 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_qlei",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "purchase_date",
+   "fieldtype": "Date",
+   "label": "Purchase Date"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "label": "Location"
+  },
+  {
+   "fieldname": "age",
+   "fieldtype": "Data",
+   "label": "Age"
+  },
+  {
+   "fieldname": "bill",
+   "fieldtype": "Attach",
+   "label": "Bill"
+  },
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "column_break_rlfr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "username",
+   "fieldtype": "Data",
+   "label": "Username"
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Data",
+   "label": "Password"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-18 17:53:36.982685",
+ "modified": "2024-02-27 14:23:02.925357",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT Device",

@@ -7,7 +7,7 @@ Ashram Issue Counter
 ERPNext - Custom
 Bhakta Training
 Prasadam Coupon Management
-Auth
 Divine Dishes
 Firebase
 Security
+WhatsApp

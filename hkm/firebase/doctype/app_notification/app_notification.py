@@ -8,8 +8,32 @@ from datetime import timedelta
 
 
 class AppNotification(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        app: DF.Link
+        is_route: DF.Check
+        message: DF.Text
+        notify: DF.Check
+        read: DF.Check
+        route: DF.Data | None
+        subject: DF.Data
+        tag: DF.Data | None
+        user: DF.Link
+    # end: auto-generated types
     def after_insert(self):
-        if self.notify:
+        # TODO Review this as it can't be dependent on Dhananjaya App.
+        # mobile_app_notifications = frappe.db.get_single_value(
+        #     "Dhananjaya Settings",
+        #     "mobile_app_notifications",
+        # )
+        mobile_app_notifications = 1
+        if self.notify and mobile_app_notifications:
             self.send_app_notification()
 
     def send_app_notification(self):

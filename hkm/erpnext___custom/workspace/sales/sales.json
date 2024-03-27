@@ -21,7 +21,7 @@
    "label": "POS Sales"
   }
  ],
- "content": "[{\"id\":\"n5JF4omGPM\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h1\\\" style=\\\"\\\"><a href=\\\"https://hkmjerp.in/app/query-report/Warehouse%20Sales%20%26%20Stock%20Analysis?company=Touchstone%20Foundation%20Jaipur&amp;warehouse=Bakery%20%26%20Confectionary%20-%20TSFJ\\\">MASTER REPORT</a></span>\",\"col\":12}},{\"id\":\"1ZkqUcOlzR\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"8Nu0U-8TZ7\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sales</span>\",\"col\":12}},{\"id\":\"CWljwGDvVA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock In/Out/Balance Report\",\"col\":6}},{\"id\":\"H5D4qg6kOT\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Rate | Group | Tax Report\",\"col\":6}},{\"id\":\"RfQdqkdsQ-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Creation Request\",\"col\":6}},{\"id\":\"bvEKcf4LWe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Price Updater\",\"col\":6}},{\"id\":\"8v2uCb6Uor\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Register\",\"col\":6}},{\"id\":\"QrwZ-1QY_0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Wise Sales Register\",\"col\":6}},{\"id\":\"A3shTOCfkr\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wGLUbxbB2m\",\"type\":\"paragraph\",\"data\":{\"text\":\"Link to Videos Tutorials on YouTube :&nbsp;<a href=\\\"https://www.youtube.com/@hkmjaipurerp\\\">HKM Jaipur ERP - YouTube</a>&nbsp;\",\"col\":12}},{\"id\":\"wAGJxpwcbB\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Today Sales Statistics</span>\",\"col\":12}},{\"id\":\"97dwSEtY9K\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Annakoot Sales\",\"col\":6}},{\"id\":\"ezqRkmQuFq\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Bakery Sales\",\"col\":6}},{\"id\":\"3fXpMhmc5s\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Visitors Count\",\"col\":6}},{\"id\":\"2-ObOeK3i7\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Bakery Bills\",\"col\":3}},{\"id\":\"sLR_imoF1W\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Annakoot Bills\",\"col\":3}},{\"id\":\"sboJNTuaa3\",\"type\":\"chart\",\"data\":{\"chart_name\":\"POS Sales\",\"col\":6}},{\"id\":\"QjHMpYBNh6\",\"type\":\"chart\",\"data\":{\"chart_name\":\"POS Items Quantity Sold\",\"col\":6}},{\"id\":\"qbA9T_d3Dj\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Hourly Sales\",\"col\":6}},{\"id\":\"S9BjXyJvy2\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Hourly Visitors\",\"col\":6}},{\"id\":\"T24t_mZqst\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Visitors Regular\",\"col\":12}}]",
+ "content": "[{\"id\":\"n5JF4omGPM\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h1\\\" style=\\\"\\\"><a href=\\\"https://hkmjerp.in/app/query-report/Warehouse%20Sales%20%26%20Stock%20Analysis?company=Touchstone%20Foundation%20Jaipur&amp;warehouse=Bakery%20%26%20Confectionary%20-%20TSFJ\\\">MASTER REPORT</a></span>\",\"col\":12}},{\"id\":\"1ZkqUcOlzR\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"8Nu0U-8TZ7\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sales</span>\",\"col\":12}},{\"id\":\"CWljwGDvVA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock In/Out/Balance Report\",\"col\":6}},{\"id\":\"H5D4qg6kOT\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Rate | Group | Tax Report\",\"col\":6}},{\"id\":\"RfQdqkdsQ-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Creation Request\",\"col\":6}},{\"id\":\"bvEKcf4LWe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Price Updater\",\"col\":6}},{\"id\":\"8v2uCb6Uor\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Register\",\"col\":6}},{\"id\":\"QrwZ-1QY_0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item Wise Sales Register\",\"col\":6}},{\"id\":\"WfUfGlC70S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Analytics\",\"col\":3}},{\"id\":\"A3shTOCfkr\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"wGLUbxbB2m\",\"type\":\"paragraph\",\"data\":{\"text\":\"Link to Videos Tutorials on YouTube :&nbsp;<a href=\\\"https://www.youtube.com/@hkmjaipurerp\\\">HKM Jaipur ERP - YouTube</a>&nbsp;\",\"col\":12}},{\"id\":\"wAGJxpwcbB\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h3\\\">Today Sales Statistics</span>\",\"col\":12}},{\"id\":\"97dwSEtY9K\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Annakoot Sales\",\"col\":6}},{\"id\":\"ezqRkmQuFq\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Bakery Sales\",\"col\":6}},{\"id\":\"3fXpMhmc5s\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Visitors Count\",\"col\":6}},{\"id\":\"2-ObOeK3i7\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Bakery Bills\",\"col\":3}},{\"id\":\"sLR_imoF1W\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Annakoot Bills\",\"col\":3}},{\"id\":\"sboJNTuaa3\",\"type\":\"chart\",\"data\":{\"chart_name\":\"POS Sales\",\"col\":6}},{\"id\":\"QjHMpYBNh6\",\"type\":\"chart\",\"data\":{\"chart_name\":\"POS Items Quantity Sold\",\"col\":6}},{\"id\":\"qbA9T_d3Dj\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Hourly Sales\",\"col\":6}},{\"id\":\"S9BjXyJvy2\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Hourly Visitors\",\"col\":6}},{\"id\":\"T24t_mZqst\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Visitors Regular\",\"col\":12}}]",
  "creation": "2023-06-03 12:11:28.669407",
  "custom_blocks": [],
  "docstatus": 0,
@@ -33,8 +33,8 @@
  "is_hidden": 0,
  "label": "Sales",
  "links": [],
- "modified": "2023-11-09 17:02:25.963665",
- "modified_by": "nrhd@hkm-group.org",
+ "modified": "2024-03-20 15:01:48.196801",
+ "modified_by": "Administrator",
  "module": "ERPNext - Custom",
  "name": "Sales",
  "number_cards": [
@@ -70,6 +70,13 @@
  ],
  "sequence_id": 5.0,
  "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Sales Analytics",
+   "link_to": "Sales Analytics",
+   "type": "Report"
+  },
   {
    "color": "Grey",
    "doc_view": "List",

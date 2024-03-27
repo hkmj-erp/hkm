@@ -1,24 +1,33 @@
 import frappe
-from hkm.erpnext___custom.po_approval.workflow_action import get_allowed_options,get_workflow_action_url,get_confirm_workflow_action_url
+from hkm.erpnext___custom.po_approval.workflow_action import (
+    get_allowed_options,
+    get_workflow_action_url,
+    get_confirm_workflow_action_url,
+)
 
-def get_approval_link(doc,user,allowed_options):
-	if 'Recommend' in allowed_options:
-		return get_confirm_workflow_action_url(doc, 'Recommend', user)
-	if 'First Approve' in allowed_options:
-		return get_confirm_workflow_action_url(doc, 'First Approve', user)
-	if 'Final Approve' in allowed_options:
-		return get_confirm_workflow_action_url(doc, 'Final Approve', user)
-	else:
-		frappe.throw("Next ALM User is not allowed to approve the Document. Please ask for permission.")
 
-def get_rejection_link(doc,user):
-	return get_confirm_workflow_action_url(doc, 'Reject', user)
+def get_approval_link(doc, user, allowed_options):
+    if "Recommend" in allowed_options:
+        return get_confirm_workflow_action_url(doc, "Recommend", user)
+    if "First Approve" in allowed_options:
+        return get_confirm_workflow_action_url(doc, "First Approve", user)
+    if "Final Approve" in allowed_options:
+        return get_confirm_workflow_action_url(doc, "Final Approve", user)
+    else:
+        frappe.throw(
+            "Next ALM User is not allowed to approve the Document. Please ask for permission."
+        )
 
-def message_str(doc,user):
-	allowed_options = get_allowed_options(user,doc)
-	approval_link = get_approval_link(doc,user,allowed_options)
-	rejection_link = get_rejection_link(doc,user)
-	message = """
+
+def get_rejection_link(doc, user):
+    return get_confirm_workflow_action_url(doc, "Reject", user)
+
+
+def message_str(doc, user):
+    allowed_options = get_allowed_options(user, doc)
+    approval_link = get_approval_link(doc, user, allowed_options)
+    rejection_link = get_rejection_link(doc, user)
+    message = """
 				<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 				<head>
@@ -273,7 +282,7 @@ def message_str(doc,user):
 				  <tr>
 				    <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
 				      
-				      <img align="center" border="0" src="https://hkmjerp.in/files/Top.jpg" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 598px;" width="598" class="v-src-width v-src-max-width"/>
+				      <img align="center" border="0" src="https://hkmjerp.in/files/PURCHASE ORDER.png" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 598px;" width="598" class="v-src-width v-src-max-width"/>
 				      
 				    </td>
 				  </tr>
@@ -1383,30 +1392,34 @@ def message_str(doc,user):
 				</html>
 
 				
-	""".format(doc.company,
-				doc.department,
-				doc.rounded_total,
-				doc.name,
-				doc.supplier_name,
-				# frappe.db.get_value("User",{"email":doc.owner}, "full_name"),
-				doc.workflow_state,
-				item_str(doc),
-				doc.base_total_taxes_and_charges,
-				doc.rounded_total,
-				doc.extra_description,
-				doc.recommended_by,
-				doc.first_approving_authority,
-				doc.final_approving_authority,
-				approval_link,
-				rejection_link,
-				frappe.utils.get_url_to_form(doc.doctype, doc.name)
-				)
-	return message
+	""".format(
+        doc.company,
+        doc.department,
+        doc.rounded_total,
+        doc.name,
+        doc.supplier_name,
+        # frappe.db.get_value("User",{"email":doc.owner}, "full_name"),
+        doc.workflow_state,
+        item_str(doc),
+        doc.base_total_taxes_and_charges,
+        doc.rounded_total,
+        doc.extra_description,
+        doc.recommended_by,
+        doc.first_approving_authority,
+        doc.final_approving_authority,
+        approval_link,
+        rejection_link,
+        frappe.utils.get_url_to_form(doc.doctype, doc.name),
+    )
+    return message
+
 
 def item_str(doc):
-	item_string=""
-	for idx,item in enumerate(doc.items):
-		item_string = item_string+"""								
+    item_string = ""
+    for idx, item in enumerate(doc.items):
+        item_string = (
+            item_string
+            + """								
 									<div class="u-row-container v-row-padding--vertical v-row-background-color" style="padding: 0px;background-color: transparent">
 									  <div class="u-row v-row-columns-background-color-background-color no-stack" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #f6f6f6;">
 									    <div style="border-collapse: collapse;display: table;width: 100%;background-color: transparent;">
@@ -1508,6 +1521,12 @@ def item_str(doc):
 									    </div>
 									  </div>
 									</div>     
-								  """.format(item.item_name,str(item.qty)+" "+item.uom,item.net_rate,item.net_amount)
+								  """.format(
+                item.item_name,
+                str(item.qty) + " " + item.uom,
+                item.net_rate,
+                item.net_amount,
+            )
+        )
 
-	return item_string
+    return item_string

@@ -1,0 +1,128 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"3lcW2KMfXf\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Ashram Management</span>\",\"col\":12}},{\"id\":\"omczZGCtzl\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Yy7utT-XzB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User List\",\"col\":3}},{\"id\":\"fvV4r3ZfSh\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"eMxd5w8pwl\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\"><b>Store</b></span>\",\"col\":12}},{\"id\":\"SvBT5R8XCm\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Issue Items\",\"col\":3}},{\"id\":\"5h6i2SR-zh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><i>Reports</i></span>\",\"col\":12}},{\"id\":\"YH9aGXSZrc\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"AhK0C8ryrx\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}},{\"id\":\"n7hDeTFqWd\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"zAualuVzzZ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\"><b>Library</b></span>\",\"col\":12}},{\"id\":\"30F2fFEMWJ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Issue a Book\",\"col\":3}},{\"id\":\"a3ezv4Rc_M\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><i>Reports</i></span>\",\"col\":12}},{\"id\":\"DWgrpmFI4k\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"ig2o-cnBD3\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "creation": "2023-01-13 20:23:31.285953",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "milestone",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Ashram",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Masters",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Books",
+   "link_count": 0,
+   "link_to": "Ashram Library Book",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Book Inward Entries",
+   "link_count": 0,
+   "link_to": "Ashram Library Book Inward",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Book Issue Entries",
+   "link_count": 0,
+   "link_to": "Ashram Library Book Issue",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Book Return Entries",
+   "link_count": 0,
+   "link_to": "Ashram Library Book Return",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Library Stock",
+   "link_count": 0,
+   "link_to": "Ashram Library Stock",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "User Report",
+   "link_count": 0,
+   "link_to": "Ashram Library User Status",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2024-03-20 15:01:48.357368",
+ "modified_by": "Administrator",
+ "module": "Ashram Issue Counter",
+ "name": "Ashram",
+ "number_cards": [],
+ "owner": "ashramstore@hkmj.in",
+ "parent_page": "HKM",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 8.0,
+ "shortcuts": [
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "format": "{}",
+   "label": "User List",
+   "link_to": "Ashram Store User",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "New",
+   "label": "Issue Items",
+   "link_to": "Ashram Library Book Issue",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "New",
+   "label": "Issue a Book",
+   "link_to": "Ashram Library Book Issue",
+   "type": "DocType"
+  }
+ ],
+ "title": "Ashram"
+}

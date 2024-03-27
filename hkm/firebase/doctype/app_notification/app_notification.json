@@ -78,7 +78,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-04 14:37:30.751237",
+ "modified": "2024-02-23 12:41:57.891843",
  "modified_by": "Administrator",
  "module": "Firebase",
  "name": "App Notification",
@@ -102,34 +102,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "DCC Preacher",
-   "share": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "DCC Cashier",
-   "share": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "DCC Manager",
-   "share": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "DCC Executive",
+   "role": "All",
    "share": 1
   }
  ],

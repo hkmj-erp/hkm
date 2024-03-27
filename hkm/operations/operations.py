@@ -1,5 +1,7 @@
 import json
 import re
+from dhananjaya.dhananjaya.api.v3.marketing.identify import identify_donor
+from dhananjaya.dhananjaya.utils import get_best_contact_address
 import frappe
 from datetime import date
 from frappe import enqueue
@@ -7,6 +9,276 @@ from frappe.utils.nestedset import get_descendants_of
 from frappe.utils import add_to_date, now
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+import calendar
+
+
+def set_proper_donors():
+    old_donor_id_map = {}
+    i = 0
+    for d in frappe.db.sql(
+        """
+                SELECT old_donor_id,GROUP_CONCAT(JSON_OBJECT('name',name,'full_name',full_name,'old_trust_code',old_trust_code)) as names
+                FROM `tabDonor` 
+                WHERE 1
+                GROUP BY old_donor_id 
+                HAVING count(*) > 1
+                    """,
+        as_dict=1,
+    ):
+        i = i + 1
+        print(f"Preparing OLD DR Map Task {i}")
+        one_map = {}
+        for donor in json.loads("[" + d["names"] + "]"):
+            address, contact, _ = get_best_contact_address(donor["name"])
+            one_map.setdefault(
+                str(donor["old_trust_code"]),
+                {"name": donor["name"], 
+                 "full_name":donor["full_name"],
+                 "contact": contact, "address": address},
+            )
+        old_donor_id_map.setdefault(d["old_donor_id"], one_map)
+        # old_donor_id_map.setdefault(
+        #     d["old_donor_id"],
+        #     {
+        #         str(d["old_trust_code"]): d["name"]
+        #         for d in json.loads("[" + d["names"] + "]")
+        #     },
+        # )
+        # name1 = json.loads(names[0])
+        # print(name1)
+    # print(old_donor_id_map)
+    print("_______________________________")
+    print("_______________________________")
+    print("____________Started Main Jon_______________")
+    print("_______________________________")
+    print("_______________________________")
+    i = 0
+    for receipt in frappe.db.sql("""
+                    SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.donor,donor.old_donor_id 
+                    FROM `tabDonation Receipt` tdr
+                    JOIN `tabDhananjaya Import Settings Company` tdis
+                    ON tdr.company = tdis.company
+                    JOIN `tabDonor` donor
+                    ON donor.name = tdr.donor
+                    WHERE 1
+                    """,as_dict=1):
+        i += 1
+        print(f"Receipt Task {i}")
+        if receipt['old_donor_id'] in old_donor_id_map:
+            required_donor = old_donor_id_map[receipt['old_donor_id']][str(receipt["old_trust_code"])]
+            if receipt['donor'] != required_donor["name"]:
+                frappe.db.set_value('Donation Receipt', receipt['name'], {
+                    'donor': required_donor["name"],
+                    'full_name': required_donor["full_name"],
+                    'contact':required_donor["contact"],
+                    'address':required_donor["address"]
+                })
+        
+        if i%1000 == 0:
+            frappe.db.commit()
+
+    frappe.db.commit()
+    
+
+def set_proper_patrons():
+    old_patron_id_map = {}
+    i = 0
+    for d in frappe.db.sql(
+        """
+                SELECT old_patron_id,GROUP_CONCAT(JSON_OBJECT('name',name,'full_name',full_name,'old_trust_code',old_trust_code)) as names
+                FROM `tabPatron` 
+                WHERE 1
+                GROUP BY old_patron_id 
+                HAVING count(*) > 1
+                    """,
+        as_dict=1,
+    ):
+        i = i + 1
+        print(f"Preparing OLD DR Map Task {i}")
+        one_map = {}
+        for patron in json.loads("[" + d["names"] + "]"):
+            one_map.setdefault(
+                str(patron["old_trust_code"]),
+                {"name": patron["name"], 
+                 "patron_name":patron["full_name"],},
+            )
+        old_patron_id_map.setdefault(d["old_patron_id"], one_map)
+        # old_donor_id_map.setdefault(
+        #     d["old_donor_id"],
+        #     {
+        #         str(d["old_trust_code"]): d["name"]
+        #         for d in json.loads("[" + d["names"] + "]")
+        #     },
+        # )
+        # name1 = json.loads(names[0])
+        # print(name1)
+    # print(old_donor_id_map)
+    print("_______________________________")
+    print("_______________________________")
+    print("____________Started Main Job_______________")
+    print("_______________________________")
+    print("_______________________________")
+    i = 0
+    for receipt in frappe.db.sql("""
+                    SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.patron,patron.old_patron_id 
+                    FROM `tabDonation Receipt` tdr
+                    JOIN `tabDhananjaya Import Settings Company` tdis
+                    ON tdr.company = tdis.company
+                    JOIN `tabPatron` patron
+                    ON patron.name = tdr.patron
+                    WHERE 1
+                    """,as_dict=1):
+        i += 1
+        print(f"Receipt Task {i}")
+        if receipt['old_patron_id'] in old_patron_id_map:
+            required_patron = old_patron_id_map[receipt['old_patron_id']][str(receipt["old_trust_code"])]
+            if receipt['patron'] != required_patron["name"]:
+                frappe.db.set_value('Donation Receipt', receipt['name'], {
+                    'patron': required_patron["name"],
+                    'patron_name': required_patron["patron_name"]
+                })
+        
+        if i%1000 == 0:
+            frappe.db.commit()
+
+    frappe.db.commit()
+
+
+# def cash_entries_adjust():
+# 	query = """
+# 			SELECT tdr.name as receipt, tdr.amount as Amount
+# 			FROM `tabDonation Receipt` tdr
+# 			LEFT JOIN `tabJournal Entry` tje
+# 			ON tje.donation_receipt  = tdr.name
+# 			WHERE tdr.docstatus = 1
+# 			AND tdr.payment_method  = "Cash"
+# 			AND tje.name IS NULL
+# 			AND tdr.receipt_date >= "2023-04-01"
+# 			AND tdr.company = "Hare Krishna Movement Jaipur"
+# 			"""
+# 	for r in frappe.db.sql(query=query,as_dict=1):
+# 		cash_journal_entry(r['receipt'])
+# 	frappe.db.commit()
+
+# def cash_journal_entry(receipt_number):
+# 	receipt_doc = frappe.get_doc("Donation Receipt",receipt_number)
+# 	seva_type_doc = frappe.get_cached_doc("Seva Type", receipt_doc.seva_type)
+
+# 	default_cost_center = receipt_doc.get_cost_center()
+
+# 	je = {
+# 		"doctype": "Journal Entry",
+# 		"voucher_type": "Cash Entry",
+# 		"company": receipt_doc.company,
+# 		"donation_receipt": receipt_doc.name,
+# 		"docstatus": 1,
+# 	}
+
+# 	##### In Case of New Donor Request #####
+
+# 	if not receipt_doc.donor:
+# 		if not receipt_doc.donor_creation_request:
+# 			frappe.throw(
+# 				"At least one of Donor or Donation Creation Request document is must to process."
+# 			)
+# 		donor_name = frappe.get_value(
+# 			"Donor Creation Request", receipt_doc.donor_creation_request, "full_name"
+# 		)
+# 	else:
+# 		donor_name = receipt_doc.full_name
+
+# 	########################################
+
+# 	je.setdefault(
+# 		"user_remark",
+# 		f"BEING AMOUNT RECEIVED FOR {receipt_doc.seva_type} FROM {donor_name} AS PER R.NO.{receipt_doc.name} DT:{receipt_doc.receipt_date} {receipt_doc.preacher} ",
+# 	)
+
+# 	# Jounrnal Entry date should be the day Cashier received the amount because it has to tally with Cashbook.
+# 	cash_date = receipt_doc.modified
+
+# 	je.setdefault("posting_date", cash_date)
+# 	je.setdefault(
+# 		"accounts",
+# 		[
+# 			{
+# 				"account": receipt_doc.donation_account,
+# 				"credit_in_account_currency": receipt_doc.amount,
+# 				# This is needed for cost center analysis.
+# 				"cost_center": default_cost_center,
+# 			},
+# 			{
+# 				"account": receipt_doc.cash_account,
+# 				"debit_in_account_currency": receipt_doc.amount,
+# 				# As it not compulsory. It will pick up the default.--> But now it is picking of other company, so explicitly declared.
+# 				"cost_center": default_cost_center,
+# 			},
+# 		],
+# 	)
+# 	je_doc = frappe.get_doc(je)
+# 	je_doc.insert()
+
+
+def notifiy_users_of_new_version():
+    users = frappe.get_all(
+        "Firebase App Token", filters={"app": "Dhananjaya"}, pluck="user"
+    )
+    users = list(set(users))
+    for user in users:
+        message = f"""Starting soon, we're switching to OTP login for simplicity.\n\nRemember, your registered email is {user}\n\nMake sure you have access to it for OTPs.\n\nNext App Update will be released on 12th March | 07:00 PM.
+					"""
+        doc = frappe.get_doc(
+            {
+                "doctype": "App Notification",
+                "app": "Dhananjaya",
+                "user": user,
+                "subject": "Important Update!",
+                "message": message,
+            }
+        )
+        doc.insert(ignore_permissions=True)
+    frappe.db.commit()
+
+
+def ahmd_mobile_clean():
+    frappe.db.sql("Donor Contact")
+
+
+def import_special_pujas():
+    for idx, d in enumerate(frappe.get_all("Temp Data", fields="*")):
+        if d["value_set"]:
+            continue
+        if not d["occasion"]:
+            continue
+        print(f"Processing {idx}")
+        if len(d["mobile"]) < 15:
+            clean_contact = re.sub(r"\D", "", d["mobile"])
+            clean_contact = clean_contact[-10:]
+        else:
+            contacts = []
+            # if " " in d["mobile"]:
+            #     contacts = d["mobile"].split(" ")
+            # for contact in contacts:
+            clean_contact = re.sub(r"\D", "", d["mobile"])[:10]
+            print(clean_contact)
+            donor = identify_donor(
+                contact=clean_contact, email=None, pan=None, aadhar=None
+            )
+            if donor:
+                donor = frappe.get_doc("Donor", donor)
+                donor.append(
+                    "puja_details",
+                    {
+                        "day": d["day"],
+                        "month": calendar.month_name[int(d["month"])],
+                        "occasion": d["occasion"],
+                    },
+                )
+                print(f"Saving Donor{donor.name}")
+                donor.save()
+                frappe.db.set_value("Temp Data", d["name"], "value_set", 1)
+                # break
+        frappe.db.commit()
 
 
 def create_seva_type():
@@ -123,7 +395,7 @@ def query():
     # update_barcodes()
     # update_special_pujas()
     # return upload_mumbai_data()
-    update_current_preacher()
+    # update_current_preacher()
     return
 
 
@@ -228,10 +500,10 @@ def update_special_pujas():
             clean_contact = re.sub(r"\D", "", data["mobile"])[-10:]
             contacts = frappe.db.sql(
                 f"""
-                    select contact_no,parent
-                    from `tabDonor Contact`
-                    where REGEXP_REPLACE(contact_no, '[^0-9]+', '') LIKE '%{clean_contact}%' and parenttype = 'Donor'
-                    """,
+					select contact_no,parent
+					from `tabDonor Contact`
+					where REGEXP_REPLACE(contact_no, '[^0-9]+', '') LIKE '%{clean_contact}%' and parenttype = 'Donor'
+					""",
                 as_dict=1,
             )
             donor = None
@@ -259,12 +531,12 @@ def update_special_pujas():
 def update_preacher_donor(d):
     max = frappe.db.sql(
         f"""
-                    SELECT preacher, count(*) as nos
-                    from `tabDonation Receipt` tdr 
-                    where donor = '{d}' AND receipt_date > NOW() - INTERVAL 3 YEAR  
-                    GROUP BY preacher
-                    order by nos desc, receipt_date desc
-                    """
+					SELECT preacher, count(*) as nos
+					from `tabDonation Receipt` tdr 
+					where donor = '{d}' AND receipt_date > NOW() - INTERVAL 3 YEAR  
+					GROUP BY preacher
+					order by nos desc, receipt_date desc
+					"""
     )
     if len(max) > 0:
         max_preacher = max[0][0]
@@ -275,11 +547,11 @@ def update_preacher_donor(d):
     else:
         latest_data = frappe.db.sql(
             f"""
-                SELECT preacher,receipt_date
-                FROM `tabDonation Receipt` tdr 
-                WHERE donor = '{d}'
-                order by receipt_date desc
-                """
+				SELECT preacher,receipt_date
+				FROM `tabDonation Receipt` tdr 
+				WHERE donor = '{d}'
+				order by receipt_date desc
+				"""
         )
         if len(latest_data) > 0:
             frappe.db.set_value(
@@ -333,10 +605,10 @@ def journal_entry_preacher_update():
         # return new_statement
         frappe.db.sql(
             f"""
-                        update `tabJournal Entry`
-                        set user_remark ='{new_statement}'
-                        where name = '{jea.parent}'
-                        """
+						update `tabJournal Entry`
+						set user_remark ='{new_statement}'
+						where name = '{jea.parent}'
+						"""
         )
         frappe.db.set_value("Journal Entry", s[2], "user_remark", new_statement)
 
@@ -347,24 +619,24 @@ def journal_entry_preacher_update():
 
 def get_donation_details():
     conditions = """
-                    AND tdr.receipt_date > NOW() - INTERVAL 10 year
-                    AND tdr.docstatus = 1
-                    AND tdr.seva_subtype NOT LIKE "%heri%"
-                    """
+					AND tdr.receipt_date > NOW() - INTERVAL 10 year
+					AND tdr.docstatus = 1
+					AND tdr.seva_subtype NOT LIKE "%heri%"
+					"""
     donors = {}
     for i in frappe.db.sql(
         f"""
-                    select tdr.donor as donor_id, tdr.receipt_date 
-                    from `tabDonation Receipt` tdr
-                    join (
-                        select tdr.donor, MAX(tdr.receipt_date) as last_donation_date
-                        from `tabDonation Receipt` tdr
-                        where 1 {conditions}
-                        group by donor
-                    ) as last_donation_details
-                    on last_donation_details.donor = tdr.donor and tdr.receipt_date = last_donation_details.last_donation_date
-                    where 1 {conditions} AND tdr.preacher = 'PNVD'
-                    """,
+					select tdr.donor as donor_id, tdr.receipt_date 
+					from `tabDonation Receipt` tdr
+					join (
+						select tdr.donor, MAX(tdr.receipt_date) as last_donation_date
+						from `tabDonation Receipt` tdr
+						where 1 {conditions}
+						group by donor
+					) as last_donation_details
+					on last_donation_details.donor = tdr.donor and tdr.receipt_date = last_donation_details.last_donation_date
+					where 1 {conditions} AND tdr.preacher = 'PNVD'
+					""",
         as_dict=1,
     ):
         donors.setdefault(i["donor_id"], i)
@@ -373,48 +645,48 @@ def get_donation_details():
 
     for i in frappe.db.sql(
         f"""
-                    select
-                        tdr.donor as donor_id,
-                        tdr.full_name as donor_name, 
-                        sum(tdr.amount) as total_donation,
-                        count(tdr.name) as times,
-                        donor_details.contact,
-                        donor_details.address
-                        # MAX(tdr.receipt_date) as last_donation
-                    from `tabDonation Receipt` tdr
-                    join (
-                            select
-                                td.name as donor_id, td.full_name,
-                                GROUP_CONCAT(DISTINCT tc.contact_no SEPARATOR' , ') as contact,
-                                GROUP_CONCAT(DISTINCT ta.address_line_1,ta.address_line_2,ta.city SEPARATOR' | ') as address
-                            from `tabDonor` td
-                            left join `tabDonor Address` ta 
-                                on ta.parent = td.name
-                            left join `tabDonor Contact` tc 
-                                on tc.parent = td.name
-                            group by donor_id
-                        ) as donor_details
-                        on donor_details.donor_id = tdr.donor 
-                    where tdr.donor IN ({donors_str})
-                    {conditions}
-                    group by tdr.donor
-                    order by times desc
-                    """,
+					select
+						tdr.donor as donor_id,
+						tdr.full_name as donor_name, 
+						sum(tdr.amount) as total_donation,
+						count(tdr.name) as times,
+						donor_details.contact,
+						donor_details.address
+						# MAX(tdr.receipt_date) as last_donation
+					from `tabDonation Receipt` tdr
+					join (
+							select
+								td.name as donor_id, td.full_name,
+								GROUP_CONCAT(DISTINCT tc.contact_no SEPARATOR' , ') as contact,
+								GROUP_CONCAT(DISTINCT ta.address_line_1,ta.address_line_2,ta.city SEPARATOR' | ') as address
+							from `tabDonor` td
+							left join `tabDonor Address` ta 
+								on ta.parent = td.name
+							left join `tabDonor Contact` tc 
+								on tc.parent = td.name
+							group by donor_id
+						) as donor_details
+						on donor_details.donor_id = tdr.donor 
+					where tdr.donor IN ({donors_str})
+					{conditions}
+					group by tdr.donor
+					order by times desc
+					""",
         as_dict=1,
     ):
         donors[i["donor_id"]].update(i)
 
     for i in frappe.db.sql(
         f"""
-                            select 
-                                donor as donor_id,
-                                preacher,
-                                sum(tdr.amount) as total_donation,count(tdr.amount) as times
-                            from `tabDonation Receipt` tdr
-                            where 1 {conditions} AND tdr.donor IN ({donors_str})
-                            group by donor,preacher
-                            order by donor,total_donation desc
-                                """,
+							select 
+								donor as donor_id,
+								preacher,
+								sum(tdr.amount) as total_donation,count(tdr.amount) as times
+							from `tabDonation Receipt` tdr
+							where 1 {conditions} AND tdr.donor IN ({donors_str})
+							group by donor,preacher
+							order by donor,total_donation desc
+								""",
         as_dict=1,
     ):
         if not "top_collector" in donors[i["donor_id"]]:
@@ -541,10 +813,10 @@ def update_suspense():
     for a in all:
         frappe.db.sql(
             f"""
-                        update `tabJournal Entry Account`
-                        set suspense_jv = '{a["bank_jv"]}'
-                        where parent = '{a["donation_jv"]}' and account = 'Suspense - HKMJ'
-                        """
+						update `tabJournal Entry Account`
+						set suspense_jv = '{a["bank_jv"]}'
+						where parent = '{a["donation_jv"]}' and account = 'Suspense - HKMJ'
+						"""
         )
         # if i == 1:
         # 	break
@@ -628,10 +900,10 @@ def assign_chunk(chunk):
 def update_donation_receipt(d):
     frappe.db.sql(
         f"""
-                    update `tabDonation Receipt`
-                    set preacher = '{d['PREACHER_CODE']}'
-                    where old_dr_no = '{d['DR_NUMBER']}'
-                    """
+					update `tabDonation Receipt`
+					set preacher = '{d['PREACHER_CODE']}'
+					where old_dr_no = '{d['DR_NUMBER']}'
+					"""
     )
     frappe.db.commit()
 
@@ -695,8 +967,8 @@ def update_asset_data():
 def match_suspense():
     frappe.db.sql(
         """
-                        
-                    """
+						
+					"""
     )
 
 
@@ -726,13 +998,13 @@ def update_taxes():
         children_groups.append(parent_item_group)
         items = []
         query = """select item.name,tax.item_tax_template,tax.name as tax_name
-                        from `tabItem` item
-                        join `tabItem Group` item_group
-                        on item.item_group = item_group.name
-                        join `tabItem Tax` tax
-                        on tax.parent = item.name
-                        where item_group.name in {}
-                        """.format(
+						from `tabItem` item
+						join `tabItem Group` item_group
+						on item.item_group = item_group.name
+						join `tabItem Tax` tax
+						on tax.parent = item.name
+						where item_group.name in {}
+						""".format(
             tuple(children_groups)
         )
         items = frappe.db.sql(query, as_dict=1)
@@ -765,19 +1037,19 @@ def update_item_types_of_materi_request_items():
             item_type = get_item_type(item_map[item])
             frappe.db.sql(
                 """
-                            UPDATE `tabMaterial Request Item`
-                            SET item_type = '{}'
-                            WHERE  item_code = '{}'
-                            """.format(
+							UPDATE `tabMaterial Request Item`
+							SET item_type = '{}'
+							WHERE  item_code = '{}'
+							""".format(
                     item_type, item
                 )
             )
             frappe.db.sql(
                 """
-                            UPDATE `tabPurchase Order Item`
-                            SET item_type = '{}'
-                            WHERE  item_code = '{}'
-                            """.format(
+							UPDATE `tabPurchase Order Item`
+							SET item_type = '{}'
+							WHERE  item_code = '{}'
+							""".format(
                     item_type, item
                 )
             )
@@ -798,23 +1070,23 @@ def get_item_type(item_details):
 def update_all_trashed_po():
     pos = frappe.db.sql(
         """
-        select po.name
-        from `tabPurchase Order` po
-        join `tabToDo` todo on todo.reference_name = po.name
-        where po.workflow_state = 'Trashed'
-        group by po.name
-        """,
+		select po.name
+		from `tabPurchase Order` po
+		join `tabToDo` todo on todo.reference_name = po.name
+		where po.workflow_state = 'Trashed'
+		group by po.name
+		""",
         as_dict=0,
     )  #
     for po in pos:
         frappe.db.sql(
             """
-                UPDATE `tabToDo`
-                SET status = 'Cancelled'
-                WHERE status = 'Open'
-                AND reference_name = '{}'
-                AND reference_type = 'Purchase Order'
-                """.format(
+				UPDATE `tabToDo`
+				SET status = 'Cancelled'
+				WHERE status = 'Open'
+				AND reference_name = '{}'
+				AND reference_type = 'Purchase Order'
+				""".format(
                 po[0]
             )
         )
@@ -1031,8 +1303,8 @@ def lastWord(string):
 def update_stock_ledger_gl_entries(voucher_no):
     gl_entries = frappe.db.sql(
         """
-                                select * from `tabGL Entry` where voucher_no = '{}'
-                                """.format(
+								select * from `tabGL Entry` where voucher_no = '{}'
+								""".format(
             voucher_no
         )
     )

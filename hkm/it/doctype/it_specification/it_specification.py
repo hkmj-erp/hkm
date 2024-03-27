@@ -7,4 +7,15 @@ from __future__ import unicode_literals
 from frappe.model.document import Document
 
 class ITSpecification(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		name1: DF.Data
+		unit_of_measure: DF.Link | None
+	# end: auto-generated types
 	pass

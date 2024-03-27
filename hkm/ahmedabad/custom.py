@@ -5,7 +5,8 @@ def get_purchase_order_details(pi):
     purchase_orders = []
     pi_doc = frappe.get_doc("Purchase Invoice", pi)
     for item in pi_doc.items:
-        purchase_orders.append(item.purchase_order)
+        if item.purchase_order:
+            purchase_orders.append(item.purchase_order)
 
     purchase_orders = list(set(purchase_orders))
 

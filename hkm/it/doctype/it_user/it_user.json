@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2021-05-02 16:53:46.008582",
  "doctype": "DocType",
@@ -64,7 +65,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-18 17:54:10.211342",
+ "modified": "2024-02-15 15:28:09.228947",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT User",

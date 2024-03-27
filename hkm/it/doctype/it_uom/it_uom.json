@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "field:name1",
  "creation": "2021-05-02 16:22:47.198228",
  "doctype": "DocType",
@@ -19,7 +20,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-18 17:54:01.074946",
+ "modified": "2024-02-15 16:25:28.265001",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT UOM",

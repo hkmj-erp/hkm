@@ -4,10 +4,9 @@
 ### This file has to be dynamically changed everytime, we need to send some customisations to other sites.
 
 custom_fixtures = [
-    "Donor Address State",
     "Workflow Action Master",
     "Workflow State",
-    "Role",
+    # "Role",
     {
         "dt": "Workflow",
         "filters": [
@@ -25,39 +24,41 @@ custom_fixtures = [
             ],
         ],
     },
-    {
-        "dt": "Custom Field",
-        "filters": [
-            [
-                "dt",
-                "in",
-                [
-                    "Material Request",
-                    "Purchase Order",
-                    "Purchase Receipt",
-                    "Purchase Invoice",
-                    "Journal Entry",
-                    "Customer",
-                    "Supplier",
-                ],
-            ],
-        ],
-    },
-    {
-        "dt": "Property Setter",
-        "filters": [
-            [
-                "doc_type",
-                "in",
-                [
-                    "Material Request",
-                    "Purchase Order",
-                    "Purchase Receipt",
-                    "Purchase Invoice",
-                ],
-            ],
-        ],
-    },
+    # {
+    #     "dt": "Custom Field",
+    #     "filters": [
+    #         [
+    #             "dt",
+    #             "in",
+    #             [
+    #                 # "Material Request",
+    #                 # "Purchase Order",
+    #                 # "Purchase Receipt",
+    #                 # "Purchase Invoice",
+    #                 # "Journal Entry",
+    #                 # "Customer",
+    #                 "Asset"
+    #                 # "Supplier",
+    #             ],
+    #         ],
+    #     ],
+    # },
+    # {
+    #     "dt": "Property Setter",
+    #     "filters": [
+    #         [
+    #             "doc_type",
+    #             "in",
+    #             [
+    #                 "Material Request",
+    #                 "Purchase Order",
+    #                 "Purchase Receipt",
+    #                 "Purchase Invoice",
+    #                 "Bank Transaction",
+    #             ],
+    #         ],
+    #     ],
+    # },
     # {
     #     "dt": "Custom DocPerm",
     #     "filters": [
@@ -70,6 +71,6 @@ custom_fixtures = [
     #         ],
     #     ],
     # },
-    "Custom DocPerm",
+    # "Custom DocPerm",
     "DJ Mode of Payment",
 ]
