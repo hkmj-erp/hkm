@@ -1,6 +1,7 @@
 import json
 import re
 from dhananjaya.dhananjaya.api.v3.marketing.identify import identify_donor
+from dhananjaya.dhananjaya.utils import get_best_contact_address
 import frappe
 from datetime import date
 from frappe import enqueue
@@ -9,6 +10,139 @@ from frappe.utils import add_to_date, now
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 import calendar
+
+
+def set_proper_donors():
+    old_donor_id_map = {}
+    i = 0
+    for d in frappe.db.sql(
+        """
+                SELECT old_donor_id,GROUP_CONCAT(JSON_OBJECT('name',name,'full_name',full_name,'old_trust_code',old_trust_code)) as names
+                FROM `tabDonor` 
+                WHERE 1
+                GROUP BY old_donor_id 
+                HAVING count(*) > 1
+                    """,
+        as_dict=1,
+    ):
+        i = i + 1
+        print(f"Preparing OLD DR Map Task {i}")
+        one_map = {}
+        for donor in json.loads("[" + d["names"] + "]"):
+            address, contact, _ = get_best_contact_address(donor["name"])
+            one_map.setdefault(
+                str(donor["old_trust_code"]),
+                {"name": donor["name"], 
+                 "full_name":donor["full_name"],
+                 "contact": contact, "address": address},
+            )
+        old_donor_id_map.setdefault(d["old_donor_id"], one_map)
+        # old_donor_id_map.setdefault(
+        #     d["old_donor_id"],
+        #     {
+        #         str(d["old_trust_code"]): d["name"]
+        #         for d in json.loads("[" + d["names"] + "]")
+        #     },
+        # )
+        # name1 = json.loads(names[0])
+        # print(name1)
+    # print(old_donor_id_map)
+    print("_______________________________")
+    print("_______________________________")
+    print("____________Started Main Jon_______________")
+    print("_______________________________")
+    print("_______________________________")
+    i = 0
+    for receipt in frappe.db.sql("""
+                    SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.donor,donor.old_donor_id 
+                    FROM `tabDonation Receipt` tdr
+                    JOIN `tabDhananjaya Import Settings Company` tdis
+                    ON tdr.company = tdis.company
+                    JOIN `tabDonor` donor
+                    ON donor.name = tdr.donor
+                    WHERE 1
+                    """,as_dict=1):
+        i += 1
+        print(f"Receipt Task {i}")
+        if receipt['old_donor_id'] in old_donor_id_map:
+            required_donor = old_donor_id_map[receipt['old_donor_id']][str(receipt["old_trust_code"])]
+            if receipt['donor'] != required_donor["name"]:
+                frappe.db.set_value('Donation Receipt', receipt['name'], {
+                    'donor': required_donor["name"],
+                    'full_name': required_donor["full_name"],
+                    'contact':required_donor["contact"],
+                    'address':required_donor["address"]
+                })
+        
+        if i%1000 == 0:
+            frappe.db.commit()
+
+    frappe.db.commit()
+    
+
+def set_proper_patrons():
+    old_patron_id_map = {}
+    i = 0
+    for d in frappe.db.sql(
+        """
+                SELECT old_patron_id,GROUP_CONCAT(JSON_OBJECT('name',name,'full_name',full_name,'old_trust_code',old_trust_code)) as names
+                FROM `tabPatron` 
+                WHERE 1
+                GROUP BY old_patron_id 
+                HAVING count(*) > 1
+                    """,
+        as_dict=1,
+    ):
+        i = i + 1
+        print(f"Preparing OLD DR Map Task {i}")
+        one_map = {}
+        for patron in json.loads("[" + d["names"] + "]"):
+            one_map.setdefault(
+                str(patron["old_trust_code"]),
+                {"name": patron["name"], 
+                 "patron_name":patron["full_name"],},
+            )
+        old_patron_id_map.setdefault(d["old_patron_id"], one_map)
+        # old_donor_id_map.setdefault(
+        #     d["old_donor_id"],
+        #     {
+        #         str(d["old_trust_code"]): d["name"]
+        #         for d in json.loads("[" + d["names"] + "]")
+        #     },
+        # )
+        # name1 = json.loads(names[0])
+        # print(name1)
+    # print(old_donor_id_map)
+    print("_______________________________")
+    print("_______________________________")
+    print("____________Started Main Job_______________")
+    print("_______________________________")
+    print("_______________________________")
+    i = 0
+    for receipt in frappe.db.sql("""
+                    SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.patron,patron.old_patron_id 
+                    FROM `tabDonation Receipt` tdr
+                    JOIN `tabDhananjaya Import Settings Company` tdis
+                    ON tdr.company = tdis.company
+                    JOIN `tabPatron` patron
+                    ON patron.name = tdr.patron
+                    WHERE 1
+                    """,as_dict=1):
+        i += 1
+        print(f"Receipt Task {i}")
+        if receipt['old_patron_id'] in old_patron_id_map:
+            required_patron = old_patron_id_map[receipt['old_patron_id']][str(receipt["old_trust_code"])]
+            if receipt['patron'] != required_patron["name"]:
+                frappe.db.set_value('Donation Receipt', receipt['name'], {
+                    'patron': required_patron["name"],
+                    'patron_name': required_patron["patron_name"]
+                })
+        
+        if i%1000 == 0:
+            frappe.db.commit()
+
+    frappe.db.commit()
+
 
 # def cash_entries_adjust():
 # 	query = """

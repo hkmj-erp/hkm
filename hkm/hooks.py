@@ -79,9 +79,7 @@ website_route_rules = [
 website_generators = ["DD User Address"]
 
 # add methods and filters to jinja environment
-jinja = {
-    "methods": ["hkm.ahmedabad.custom.get_purchase_order_details"]
-}
+jinja = {"methods": ["hkm.ahmedabad.custom.get_purchase_order_details"]}
 
 
 # Installation
@@ -149,9 +147,20 @@ override_doctype_class = {
 
 doc_events = {
     "*": {
-        "before_insert": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
-        "before_cancel": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
-        "before_save": "hkm.erpnext___custom.letterhead.query",
+        "before_insert": "hkm.hooks_event.before_insert",
+        "before_cancel": "hkm.hooks_event.before_cancel",
+        "before_save": "hkm.hooks_event.before_save",
+        "after_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "before_validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_update": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "before_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_trash": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "after_delete": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "before_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
     },
     "Task": {"on_update": "hkm.erpnext___custom.task_notification.query"},
     "Sales Invoice": {
@@ -180,6 +189,24 @@ doc_events = {
     "Purchase Receipt": {
         "validate": "hkm.erpnext___custom.extend.purchase_receipt.validate",
     },
+}
+
+doc_events = {
+    "*": {
+        "before_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "after_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "before_validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_update": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "before_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "before_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_trash": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "after_delete": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "before_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "on_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+    }
 }
 # Scheduled Tasks
 # ---------------
