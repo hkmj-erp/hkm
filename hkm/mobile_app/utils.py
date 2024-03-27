@@ -5,6 +5,7 @@ import frappe
 from frappe.utils.image import optimize_image
 from frappe.core.api.file import create_new_folder
 
+
 @frappe.whitelist()
 def attach_image_to_doc():
     data = json.loads(frappe.form_dict.data)
@@ -21,7 +22,9 @@ def attach_image_to_doc():
 
     if doc.get(docfield) is not None:
         images = frappe.get_all(
-            "File", filters={"attached_to_name": data["name"], "attached_to_field": docfield}, pluck="name"
+            "File",
+            filters={"attached_to_name": data["name"], "attached_to_field": docfield},
+            pluck="name",
         )
         if len(images) > 0:
             frappe.delete_doc("File", images[0], ignore_permissions=True)
@@ -39,7 +42,14 @@ def attach_image_to_doc():
             args["max_width"] = 1200
             content = optimize_image(**args)
 
-        filename = doc.name + "-" + f"profile" + str(randint(100, 999)) + "." + fileref.split(".")[-1]
+        filename = (
+            doc.name
+            + "-"
+            + f"profile"
+            + str(randint(100, 999))
+            + "."
+            + fileref.split(".")[-1]
+        )
         frappe.local.uploaded_file = content
         frappe.local.uploaded_filename = filename
 
