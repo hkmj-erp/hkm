@@ -11,21 +11,25 @@
   "naming_series",
   "brand",
   "model",
+  "purchase_date",
   "column_break_qlei",
   "company",
   "category",
-  "purchase_date",
+  "purchase_cost",
+  "status",
   "section_break_4",
   "specifications",
   "section_break_6",
-  "it_user",
-  "location",
-  "name1",
+  "user",
+  "password",
+  "image",
   "column_break_rlfr",
+  "location",
   "age",
   "bill",
-  "username",
-  "password"
+  "details_tab",
+  "it_device_issue",
+  "it_maintenance"
  ],
  "fields": [
   {
@@ -74,19 +78,6 @@
    "label": "User Details"
   },
   {
-   "fieldname": "it_user",
-   "fieldtype": "Link",
-   "label": "Custodian",
-   "options": "IT User"
-  },
-  {
-   "fetch_from": "it_user.name1",
-   "fieldname": "name1",
-   "fieldtype": "Data",
-   "label": "Name",
-   "read_only": 1
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -127,19 +118,52 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "username",
-   "fieldtype": "Data",
-   "label": "Username"
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image"
   },
   {
    "fieldname": "password",
    "fieldtype": "Data",
    "label": "Password"
+  },
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Logs"
+  },
+  {
+   "fieldname": "it_device_issue",
+   "fieldtype": "Table",
+   "label": "IT Device Issue",
+   "options": "IT Device Issue"
+  },
+  {
+   "fieldname": "it_maintenance",
+   "fieldtype": "Table",
+   "label": "IT Maintenance",
+   "options": "IT Maintenance"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Data",
+   "label": "User"
+  },
+  {
+   "fieldname": "purchase_cost",
+   "fieldtype": "Currency",
+   "label": "Purchase Cost"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status"
   }
  ],
+ "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-27 14:23:02.925357",
+ "modified": "2024-03-14 15:00:22.294740",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT Device",

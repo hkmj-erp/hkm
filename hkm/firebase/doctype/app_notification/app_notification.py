@@ -25,6 +25,7 @@ class AppNotification(Document):
         subject: DF.Data
         tag: DF.Data | None
         user: DF.Link
+
     # end: auto-generated types
     def after_insert(self):
         # TODO Review this as it can't be dependent on Dhananjaya App.
@@ -37,7 +38,7 @@ class AppNotification(Document):
             self.send_app_notification()
 
     def send_app_notification(self):
-        tokens = frappe.db.get_list(
+        tokens = frappe.get_all(
             "Firebase App Token",
             pluck="token",
             filters={"user": self.user},
