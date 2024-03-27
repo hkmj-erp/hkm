@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"SDTCAokJEh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\" style=\\\"\\\">FOLK Jaipur</span>\",\"col\":12}},{\"id\":\"z0jSeoQFN3\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"nK1jWTxj9s\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"FOLK Student\",\"col\":3}},{\"id\":\"mgi-STdyly\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Residency Rent\",\"col\":3}},{\"id\":\"DlUqIVsdw2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation\",\"col\":3}},{\"id\":\"OFzNWtJRCo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Rent Report\",\"col\":3}},{\"id\":\"S71upLy4kK\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"SIbF-VNfew\",\"type\":\"card\",\"data\":{\"card_name\":\"Student Master\",\"col\":4}},{\"id\":\"_xtVlHNILN\",\"type\":\"card\",\"data\":{\"card_name\":\"Dormitory\",\"col\":4}},{\"id\":\"xd9T1RKi63\",\"type\":\"card\",\"data\":{\"card_name\":\"Miscellaneous\",\"col\":4}}]",
+ "content": "[{\"id\":\"SDTCAokJEh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\" style=\\\"\\\">FOLK Ahmedabad</span>\",\"col\":12}},{\"id\":\"z0jSeoQFN3\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"nK1jWTxj9s\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"FOLK Student\",\"col\":3}},{\"id\":\"mgi-STdyly\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Residency Rent\",\"col\":3}},{\"id\":\"DlUqIVsdw2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Donation\",\"col\":3}},{\"id\":\"OFzNWtJRCo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Rent Report\",\"col\":3}},{\"id\":\"S71upLy4kK\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"SIbF-VNfew\",\"type\":\"card\",\"data\":{\"card_name\":\"Student Master\",\"col\":4}},{\"id\":\"_xtVlHNILN\",\"type\":\"card\",\"data\":{\"card_name\":\"Dormitory\",\"col\":4}},{\"id\":\"xd9T1RKi63\",\"type\":\"card\",\"data\":{\"card_name\":\"Miscellaneous\",\"col\":4}}]",
  "creation": "2022-12-09 18:50:48.029324",
  "custom_blocks": [],
  "docstatus": 0,
@@ -197,8 +197,8 @@
    "type": "Link"
   }
  ],
- "modified": "2023-11-06 14:45:46.374799",
- "modified_by": "Administrator",
+ "modified": "2024-03-27 19:17:43.766073",
+ "modified_by": "nrhd@hkm-group.org",
  "module": "FOLK Base",
  "name": "FOLK",
  "number_cards": [],

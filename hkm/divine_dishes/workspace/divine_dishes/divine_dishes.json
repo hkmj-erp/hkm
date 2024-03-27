@@ -91,8 +91,8 @@
    "type": "Link"
   }
  ],
- "modified": "2023-11-06 14:45:46.445531",
- "modified_by": "Administrator",
+ "modified": "2024-03-27 19:17:43.946261",
+ "modified_by": "nrhd@hkm-group.org",
  "module": "Divine Dishes",
  "name": "Divine Dishes",
  "number_cards": [],
@@ -105,7 +105,7 @@
    "role": "DD Manager"
   }
  ],
- "sequence_id": 7.0,
+ "sequence_id": 9.0,
  "shortcuts": [],
  "title": "Divine Dishes"
 }
