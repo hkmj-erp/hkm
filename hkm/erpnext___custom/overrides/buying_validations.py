@@ -1,5 +1,5 @@
 import frappe
-
+from frappe import _
 def validate_work_order_item(self):
     if not self.meta.get_field("for_a_work_order") or not self.for_a_work_order: 
         return

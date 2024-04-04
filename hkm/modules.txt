@@ -6,7 +6,6 @@ FLEET
 Ashram Issue Counter
 ERPNext - Custom
 Bhakta Training
-Prasadam Coupon Management
 Divine Dishes
 Firebase
 Security
