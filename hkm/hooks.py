@@ -147,20 +147,20 @@ override_doctype_class = {
 
 doc_events = {
     "*": {
-        "before_insert": "hkm.hooks_event.before_insert",
-        "before_cancel": "hkm.hooks_event.before_cancel",
-        "before_save": "hkm.hooks_event.before_save",
-        "after_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "before_validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_update": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "before_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_trash": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "after_delete": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "before_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+        "before_insert": "hkm.generic_doctype_events.before_insert",
+        "before_cancel": "hkm.generic_doctype_events.before_cancel",
+        "before_save": "hkm.generic_doctype_events.before_save",
+        "after_insert": "hkm.generic_doctype_events.after_insert",
+        "before_validate": "hkm.generic_doctype_events.before_validate",
+        "validate": "hkm.generic_doctype_events.validate",
+        "on_update": "hkm.generic_doctype_events.on_update",
+        "before_submit": "hkm.generic_doctype_events.before_submit",
+        "on_submit": "hkm.generic_doctype_events.on_submit",
+        "on_cancel": "hkm.generic_doctype_events.on_cancel",
+        "on_trash": "hkm.generic_doctype_events.on_trash",
+        "after_delete": "hkm.generic_doctype_events.after_delete",
+        "before_update_after_submit": "hkm.generic_doctype_events.before_update_after_submit",
+        "on_update_after_submit": "hkm.generic_doctype_events.on_update_after_submit",
     },
     "Task": {"on_update": "hkm.erpnext___custom.task_notification.query"},
     "Sales Invoice": {
@@ -174,7 +174,7 @@ doc_events = {
     "Item": {
         "before_insert": "hkm.erpnext___custom.extend.item.item_taxes_and_income_account_set",  # Before the document first time inserted, this will not run always whenever some changes are made to the document
         "before_insert": "hkm.erpnext___custom.extend.item.update_item_code_in_barcodes",
-        "after_insert": "hkm.erpnext___custom.extend.item.item_creation_update",
+        "after_insert": "hkm.erpnext___custom.extend.item.item_creation_update"
     },
     "Purchase Invoice": {
         "before_submit": [
@@ -191,23 +191,23 @@ doc_events = {
     },
 }
 
-doc_events = {
-    "*": {
-        "before_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "after_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "before_validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_update": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "before_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "before_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_trash": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "after_delete": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "before_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-        "on_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-    }
-}
+# doc_events = {
+#     "*": {
+#         "before_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "after_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "before_validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "on_update": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "before_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "on_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "before_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "on_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "on_trash": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "after_delete": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "before_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#         "on_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
+#     }
+# }
 # Scheduled Tasks
 # ---------------
 

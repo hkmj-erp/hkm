@@ -6,6 +6,9 @@ from frappe.model.workflow import apply_workflow
 system_admin = "nrhd@hkm-group.org"
 
 
+def validate(self, method):
+    frappe.throw("Hare Krishna")
+
 def item_creation_update(self, method):
     if self.get("item_creation_request"):  # self.flags.is_new_doc and
         ic_request = frappe.get_doc(
@@ -33,7 +36,9 @@ def item_creation_update(self, method):
         )
 
         apply_workflow(ic_request, "Confirm as Done")
+        frappe.errprint("Doing Creation")
         frappe.db.commit()
+    frappe.errprint("Doing 2222")
     return
 
 

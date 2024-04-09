@@ -6,6 +6,23 @@ from frappe.model.document import Document
 
 
 class ItemPriceUpdate(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+        from hkm.erpnext___custom.doctype.item_price_update_detail.item_price_update_detail import ItemPriceUpdateDetail
+
+        amended_from: DF.Link | None
+        company: DF.Link
+        item_group: DF.Link | None
+        items: DF.Table[ItemPriceUpdateDetail]
+        name: DF.Int | None
+        price_list: DF.Link
+        scan_barcode: DF.Data | None
+    # end: auto-generated types
     def validate(self):
         self.validate_duplicate()
 
