@@ -12,7 +12,7 @@ def random_string_generator(str_size, allowed_chars):
 
 
 @frappe.whitelist(allow_guest=True)
-def generate_otp(mobile=None, email=None):
+def generate_otp(mobile=None, email=None, signature= None):
     if mobile:
         mobile = re.sub(r"\D", "", mobile)[-10:]
         if not frappe.db.exists("User", {"mobile_no": mobile}):
@@ -47,7 +47,8 @@ def generate_otp(mobile=None, email=None):
         # )
 
         ## Send SMS
-        message = f"Hare Krishna Dear {user.full_name}, Your OTP for login is {otp}."
+        # message = f"Hare Krishna Dear {user.full_name}, Your OTP for login is {otp}."
+        message = f"""Your app code is: {otp} \n-Hare Krishna Movement \nApp Hash: {signature}"""
         send_sms(receiver_list=[phone], msg=message)
 
     return
@@ -66,9 +67,11 @@ def send_otp_on_email(email, otp):
 def verify_otp(otp, email=None, mobile=None):
     user = None
     if mobile:
+        mobile = re.sub(r"\D", "", mobile)[-10:]
+        if not frappe.db.exists("User", {"mobile_no": mobile}):
+            frappe.throw("No User exists with this Mobile Number")
         user = frappe.get_doc("User", {"mobile_no": mobile})
         email = user.name
-        frappe.errprint(email)
 
     stored_otp = None
     if email == TEST_EMAIL:

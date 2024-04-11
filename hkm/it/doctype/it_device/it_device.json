@@ -26,10 +26,7 @@
   "column_break_rlfr",
   "location",
   "age",
-  "bill",
-  "details_tab",
-  "it_device_issue",
-  "it_maintenance"
+  "bill"
  ],
  "fields": [
   {
@@ -128,23 +125,6 @@
    "label": "Password"
   },
   {
-   "fieldname": "details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Logs"
-  },
-  {
-   "fieldname": "it_device_issue",
-   "fieldtype": "Table",
-   "label": "IT Device Issue",
-   "options": "IT Device Issue"
-  },
-  {
-   "fieldname": "it_maintenance",
-   "fieldtype": "Table",
-   "label": "IT Maintenance",
-   "options": "IT Maintenance"
-  },
-  {
    "fieldname": "user",
    "fieldtype": "Data",
    "label": "User"
@@ -163,7 +143,7 @@
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-14 15:00:22.294740",
+ "modified": "2024-04-11 15:19:51.106714",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT Device",

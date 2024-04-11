@@ -13,7 +13,6 @@ class ITDevice(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.model.document import Document
 		from frappe.types import DF
 		from hkm.it.doctype.it_device_specification.it_device_specification import ITDeviceSpecification
 
@@ -23,8 +22,6 @@ class ITDevice(Document):
 		category: DF.Link | None
 		company: DF.Link
 		image: DF.AttachImage | None
-		it_device_issue: DF.Table[Document]
-		it_maintenance: DF.Table[Document]
 		location: DF.Data | None
 		model: DF.Data | None
 		naming_series: DF.Literal["ITD-.YY.-"]
