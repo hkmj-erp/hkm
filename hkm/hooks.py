@@ -345,3 +345,5 @@ user_data_fields = [
 ]
 
 fixtures = custom_fixtures
+
+website_route_rules = [{'from_route': '/meetings/<path:app_path>', 'to_route': 'meetings'},]
