@@ -92,11 +92,15 @@ def get_journal_entry_from_statement(statement):
     )
 
     accounts = []
+    COST_CENTER = frappe.db.get_value(
+        "Company", bank_transaction.company, "cost_center"
+    )
     accounts.append(
         {
             # "account": "",
             "credit_in_account_currency": bank_transaction.deposit,
             "debit_in_account_currency": bank_transaction.withdrawal,
+            "cost_center": COST_CENTER,
         }
     )
 
@@ -106,6 +110,7 @@ def get_journal_entry_from_statement(statement):
             "bank_account": bank_transaction.bank_account,
             "credit_in_account_currency": bank_transaction.withdrawal,
             "debit_in_account_currency": bank_transaction.deposit,
+            "cost_center": COST_CENTER,
         }
     )
 
