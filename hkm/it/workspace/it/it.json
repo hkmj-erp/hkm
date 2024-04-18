@@ -1,13 +1,11 @@
 {
  "charts": [
   {
-   "chart_name": "IT User Report"
-  },
-  {
-   "chart_name": "IT Devices Category"
+   "chart_name": "Purchase Order IT-HKMJ",
+   "label": "IT Purchases"
   }
  ],
- "content": "[{\"type\": \"chart\", \"data\": {\"chart_name\": null, \"col\": 12}}, {\"type\": \"chart\", \"data\": {\"chart_name\": null, \"col\": 12}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"Your Shortcuts\", \"level\": 4, \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"New User\", \"col\": 4}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"New Device\", \"col\": 4}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"Reports & Masters\", \"level\": 4, \"col\": 12}}, {\"type\": \"card\", \"data\": {\"card_name\": \"Master\", \"col\": 4}}]",
+ "content": "[{\"id\":\"P1sH2s032M\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"BAeAvRn081\",\"type\":\"chart\",\"data\":{\"chart_name\":\"IT Purchases\",\"col\":12}},{\"id\":\"YrInQMGy_Z\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Your Shortcuts</span>\",\"col\":12}},{\"id\":\"XQK-C8vq2U\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New User\",\"col\":4}},{\"id\":\"UBr9DaRRaf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Device\",\"col\":4}},{\"id\":\"lO3RGSkJGB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"q48yNEmigf\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Reports &amp; Masters</span>\",\"col\":12}},{\"id\":\"o54kQSdUbx\",\"type\":\"card\",\"data\":{\"card_name\":\"Master\",\"col\":4}}]",
  "creation": "2022-02-06 16:15:27.236488",
  "custom_blocks": [],
  "docstatus": 0,
@@ -88,12 +86,12 @@
    "type": "Link"
   }
  ],
- "modified": "2024-03-20 15:01:48.148393",
- "modified_by": "Administrator",
+ "modified": "2024-04-17 23:52:50.274068",
+ "modified_by": "ajad@hkmjaipur.org",
  "module": "IT",
  "name": "IT",
  "number_cards": [],
- "owner": "nrhd@hkm-group.org",
+ "owner": "nrhd@hkmjaipur.org",
  "parent_page": "HKM",
  "public": 1,
  "quick_lists": [],
