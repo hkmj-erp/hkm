@@ -6,9 +6,18 @@ import frappe
 from frappe import _, throw
 from frappe.utils import flt
 from erpnext.accounts.doctype.journal_entry.journal_entry import JournalEntry
+from frappe.utils.data import getdate
+from frappe.model.naming import getseries
 
 
 class HKMJournalEntry(JournalEntry):
+    def autoname(self):
+        dateF = getdate(self.posting_date)
+        company_abbr = frappe.get_cached_value("Company", self.company, "abbr")
+        year = dateF.strftime("%y")
+        month = dateF.strftime("%m")
+        prefix = f"{company_abbr}-JV-{year}{month}-"
+        self.name = prefix + getseries(prefix, 5)
 
     def on_submit(self):
         self.validate_gst_entry()

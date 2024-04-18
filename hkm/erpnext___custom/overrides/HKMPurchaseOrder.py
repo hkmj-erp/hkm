@@ -30,7 +30,11 @@ class HKMPurchaseOrder(PurchaseOrder):
 
     def update_extra_description_from_mrn(self):
         descriptions = []
-        mrns = frappe.db.get_all("Purchase Order Item", pluck="material_request", filters={"parent": self.name})
+        mrns = frappe.db.get_all(
+            "Purchase Order Item",
+            pluck="material_request",
+            filters={"parent": self.name},
+        )
         mrns = set(mrns)
         for mrn in mrns:
             if mrn is not None:
