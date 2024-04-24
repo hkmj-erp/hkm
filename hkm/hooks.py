@@ -190,24 +190,6 @@ doc_events = {
         "validate": "hkm.erpnext___custom.extend.purchase_receipt.validate",
     },
 }
-
-# doc_events = {
-#     "*": {
-#         "before_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "after_insert": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "before_validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "validate": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "on_update": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "before_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "on_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "before_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "on_cancel": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "on_trash": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "after_delete": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "before_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#         "on_update_after_submit": "hkm.whatsapp.utils.run_server_script_for_doc_event",
-#     }
-# }
 # Scheduled Tasks
 # ---------------
 
