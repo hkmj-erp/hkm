@@ -43,13 +43,14 @@
   {
    "fieldname": "app",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "App",
    "options": "Firebase Admin App"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-04 11:55:32.981433",
+ "modified": "2024-04-26 06:31:37.451802",
  "modified_by": "Administrator",
  "module": "Firebase",
  "name": "Firebase App Token",

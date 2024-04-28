@@ -4,7 +4,8 @@
 ### This file has to be dynamically changed everytime, we need to send some customisations to other sites.
 
 custom_fixtures = [
-    "SMS Settings"
+    # "Sadhana Parameter"
+    # "SMS Settings"
     # "DJ Receipt Format"
     # "Workflow Action Master",
     # "Workflow State",
