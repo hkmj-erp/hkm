@@ -9,3 +9,4 @@ hkm/fixtures
 hkm/operations
 hkm/operations/operations.py
 hkm/mobile_app/test.py
+hkm/erpnext___custom/extend/hr/operations.py

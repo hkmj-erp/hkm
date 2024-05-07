@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-06 10:57:30.668565",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "month",
+  "column_break_skzv",
+  "year",
+  "operations_section",
+  "fetch_c_offs",
+  "adjust_leaves_to_absent_days"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_skzv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "operations_section",
+   "fieldtype": "Section Break",
+   "label": "Operations"
+  },
+  {
+   "fieldname": "fetch_c_offs",
+   "fieldtype": "Button",
+   "label": "Get Compensatory Offs from Work on Holidays"
+  },
+  {
+   "fieldname": "adjust_leaves_to_absent_days",
+   "fieldtype": "Button",
+   "label": "Adjust Leaves to Absent Days"
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Month",
+   "options": "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+   "reqd": 1
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Year",
+   "length": 4,
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-05-06 11:21:31.608840",
+ "modified_by": "Administrator",
+ "module": "ERPNext - Custom",
+ "name": "HKM HR Operations",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

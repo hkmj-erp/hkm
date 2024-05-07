@@ -196,6 +196,7 @@ doc_events = {
 scheduler_events = {
     "cron": {
         "15 20 * * *": ["hkm.divine_dishes.tasks.every_day_evening"],
+        "48 16 * * *": ["hkm.erpnext___custom.extend.hr.operations.get_chekins"],
     }
 }
 

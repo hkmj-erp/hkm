@@ -1,20 +1,22 @@
 from hkm.erpnext___custom.extend.hr.essl import eTimeTrackLite
 from datetime import datetime
 import frappe
+from frappe.utils import today
 
 
 def get_chekins():
     machine = eTimeTrackLite(domain="59.144.166.140:82")
-    from_t = "2024-03-01"
-    till = "2024-03-31"
-    # today_str = today.strftime("%Y-%m-%d")
+    from_t = "2024-05-01"
+    till = "2024-05-01"
+    # from_t = today()
+    # till = today()
     machine.set_request_body(
         {
             "from_time": from_t,
             "to_time": till,
             "serial_no": "AF39202660402",
-            "username": "erp",
-            "password": "Krishna@#@123",
+            # "username": "erp",
+            # "password": "************",
         }
     )
     machine.fetch_logs()
@@ -29,7 +31,7 @@ def get_chekins():
         employee_map.setdefault(employee["attendance_device_id"], employee["name"])
     length = len(machine.logs)
     for ind, log in enumerate(machine.logs):
-        print(f"Operation : {ind}/{length}")
+        # print(f"Operation : {ind}/{length}")
         if log[0] in employee_map:
             checkin_doc = frappe.get_doc(
                 {
