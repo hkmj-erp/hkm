@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from firebase_admin import messaging
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 
 class AppNotification(Document):
@@ -66,3 +66,16 @@ class AppNotification(Document):
             fa_doc = frappe.get_doc("Firebase Admin App", self.app)
             response = messaging.send_multicast(message, app=fa_doc.instance)
             return response
+
+
+def delete_old_app_notifications():
+    one_month_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    eligible_notiifcations = frappe.get_all(
+        "App Notification",
+        filters=[["creation", "<", one_month_ago]],
+        page_length=5000,
+        order_by="creation",
+        pluck="name",
+    )
+    for n in eligible_notiifcations:
+        frappe.delete_doc("App Notification", n)

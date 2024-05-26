@@ -7,7 +7,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "redirect_to"
+  "redirect_to",
+  "ephemeral"
  ],
  "fields": [
   {
@@ -15,11 +16,17 @@
    "fieldtype": "Data",
    "label": "Redirect To",
    "length": 500
+  },
+  {
+   "default": "0",
+   "fieldname": "ephemeral",
+   "fieldtype": "Check",
+   "label": "Ephemeral"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-29 17:50:01.121117",
+ "modified": "2024-05-10 10:05:23.635727",
  "modified_by": "Administrator",
  "module": "ERPNext - Custom",
  "name": "HKM Redirect",

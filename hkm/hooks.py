@@ -135,10 +135,12 @@ permission_query_conditions.update(
 # }
 override_doctype_class = {
     "POS Invoice": "hkm.erpnext___custom.overrides.HKMPOSInvoice.HKMPOSInvoice",
+    "POS Closing Entry": "hkm.erpnext___custom.overrides.HKMPOSClosingEntry.HKMPOSClosingEntry",
     "Sales Invoice": "hkm.erpnext___custom.overrides.HKMSalesInvoice.HKMSalesInvoice",
     "Journal Entry": "hkm.erpnext___custom.overrides.HKMJournalEntry.HKMJournalEntry",
     "Material Request": "hkm.erpnext___custom.overrides.HKMMaterialRequest.HKMMaterialRequest",
     "Purchase Order": "hkm.erpnext___custom.overrides.HKMPurchaseOrder.HKMPurchaseOrder",
+    "Purchase Invoice": "hkm.erpnext___custom.overrides.HKMPurchaseInvoice.HKMPurchaseInvoice",
 }
 
 # Document Events
@@ -192,12 +194,15 @@ doc_events = {
 }
 # Scheduled Tasks
 # ---------------
-
 scheduler_events = {
+    "daily_long": [
+        "hkm.erpnext___custom.doctype.hkm_redirect.hkm_redirect.delete_temporary_short_links",
+        "hkm.firebase.doctype.app_notification.app_notification.delete_old_app_notifications",
+    ],
     "cron": {
         "15 20 * * *": ["hkm.divine_dishes.tasks.every_day_evening"],
-        "48 16 * * *": ["hkm.erpnext___custom.extend.hr.operations.get_chekins"],
-    }
+        # "48 16 * * *": ["hkm.erpnext___custom.extend.hr.operations.get_chekins"],
+    },
 }
 
 # scheduler_events = {
@@ -331,5 +336,4 @@ fixtures = custom_fixtures
 
 website_route_rules = [
     {"from_route": "/sl/<short_url>", "to_route": "redirect"},
-    {"from_route": "/meetings/<path:app_path>", "to_route": "meetings"},
 ]
