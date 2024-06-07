@@ -60,6 +60,7 @@
   {
    "fieldname": "app",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "App",
    "options": "Firebase Admin App",
    "reqd": 1
@@ -78,7 +79,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-23 12:41:57.891843",
+ "modified": "2024-05-27 19:26:38.784535",
  "modified_by": "Administrator",
  "module": "Firebase",
  "name": "App Notification",

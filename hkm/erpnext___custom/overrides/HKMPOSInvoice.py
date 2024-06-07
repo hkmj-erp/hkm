@@ -3,7 +3,10 @@ import frappe, erpnext
 from frappe import _
 from frappe.utils import flt
 
-from erpnext.accounts.doctype.pos_invoice.pos_invoice import POSInvoice, get_stock_availability
+from erpnext.accounts.doctype.pos_invoice.pos_invoice import (
+    POSInvoice,
+    get_stock_availability,
+)
 
 
 class HKMPOSInvoice(POSInvoice):
@@ -31,7 +34,9 @@ class HKMPOSInvoice(POSInvoice):
         for item in self.get("items"):
             valuation_rate = frappe.get_value("Item", item.item_code, "valuation_rate")
             if item.rate == 0:
-                frappe.throw("Sale Rate of <b>Item: {}</b> can't be ZERO".format(item.item_name))
+                frappe.throw(
+                    "Sale Rate of <b>Item: {}</b> can't be ZERO".format(item.item_name)
+                )
             if item.rate < valuation_rate:
                 frappe.throw(
                     "Sale Rate({0}) of <b>Item: {1}</b> can't be less than it's Valuation Rate ({2})".format(
@@ -78,8 +83,12 @@ class HKMPOSInvoice(POSInvoice):
                     rows.append(temp_data)
                 else:
                     rows[row_index]["Taxable"] += qty * rate
-                    rows[row_index]["CGSTI"] = rows[row_index]["CGSTI"] + qty * rate * GSTp / 200
-                    rows[row_index]["SGSTI"] = rows[row_index]["SGSTI"] + qty * rate * GSTp / 200
+                    rows[row_index]["CGSTI"] = (
+                        rows[row_index]["CGSTI"] + qty * rate * GSTp / 200
+                    )
+                    rows[row_index]["SGSTI"] = (
+                        rows[row_index]["SGSTI"] + qty * rate * GSTp / 200
+                    )
         for row in rows:
             row["Taxable"] = round(row["Taxable"], 2)
             row["CGSTI"] = round(row["CGSTI"], 2)
@@ -104,7 +113,10 @@ class HKMPOSInvoice(POSInvoice):
         )
         address = adds[0]
 
-        formatted_address = "%(address_line1)s, %(address_line2)s, %(city)s, %(state)s - %(pincode)s" % address
+        formatted_address = (
+            "%(address_line1)s, %(address_line2)s, %(city)s, %(state)s - %(pincode)s"
+            % address
+        )
 
         return formatted_address
 
@@ -117,13 +129,24 @@ class HKMPOSInvoice(POSInvoice):
             grp = item.item_group
             qty = item.qty
             if grp not in item_group_data:
-                item_group_data.setdefault(grp, {item.item_code: frappe._dict({"name": item.item_name, "qty": qty})})
+                item_group_data.setdefault(
+                    grp,
+                    {
+                        item.item_code: frappe._dict(
+                            {"name": item.item_name, "qty": qty}
+                        )
+                    },
+                )
             else:
                 grp_data = item_group_data[grp]
                 if item.item_code not in grp_data:
-                    grp_data.setdefault(item.item_code, {"name": item.item_name, "qty": qty})
+                    grp_data.setdefault(
+                        item.item_code, {"name": item.item_name, "qty": qty}
+                    )
                 else:
-                    grp_data[item.item_code]["qty"] = grp_data[item.item_code]["qty"] + qty
+                    grp_data[item.item_code]["qty"] = (
+                        grp_data[item.item_code]["qty"] + qty
+                    )
                 item_group_data.setdefault(grp, grp_data)
 
         # For Restaurant : Get the count of this bill
@@ -164,19 +187,35 @@ class HKMPOSInvoice(POSInvoice):
             available_stock, is_stock_item = get_stock_availability(item, warehouse)
             if is_stock_item and flt(available_stock) < flt(unique_items_qty[item]):
                 frappe.throw(
-                    _("Stock quantity not enough for Item Code: {} under warehouse {}. Available quantity {}.").format(
-                        item, warehouse, available_stock, unique_items_qty[item]
-                    ),
+                    _(
+                        "Stock quantity not enough for Item Code: {} under warehouse {}. Available quantity {}."
+                    ).format(item, warehouse, available_stock, unique_items_qty[item]),
                     title=_("Item Unavailable"),
                 )
         return
 
     def validate_discount(self):
         amount_threshold = 3000
-        pos_profiles = ["POS - Donwcounter", "POS - RKM Book Counter", "POS - Temple Counter"]
+        pos_profiles = [
+            "POS - Donwcounter",
+            "POS - RKM Book Counter",
+            "POS - Temple Counter",
+        ]
         if (not self.is_return) and self.pos_profile in pos_profiles:
-            if self.grand_total < amount_threshold and self.additional_discount_percentage != 0:
-                frappe.throw("Discount is not allowed for amount < {}".fomrat(amount_threshold))
-            if self.grand_total >= amount_threshold and self.additional_discount_percentage != 5:
-                frappe.throw("Discount is not applied on amount >= {} or applied more".format(amount_threshold))
+            if (
+                self.grand_total < amount_threshold
+                and self.additional_discount_percentage != 0
+            ):
+                frappe.throw(
+                    "Discount is not allowed for amount < {}".fomrat(amount_threshold)
+                )
+            if (
+                self.grand_total >= amount_threshold
+                and self.additional_discount_percentage != 5
+            ):
+                frappe.throw(
+                    "Discount is not applied on amount >= {} or applied more".format(
+                        amount_threshold
+                    )
+                )
         return

@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-04 10:36:21.364531",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "user",
+  "request_ip",
+  "path",
+  "api_data"
+ ],
+ "fields": [
+  {
+   "fieldname": "api_data",
+   "fieldtype": "JSON",
+   "label": "API Data"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "request_ip",
+   "fieldtype": "Data",
+   "label": "Request IP"
+  },
+  {
+   "fieldname": "path",
+   "fieldtype": "Data",
+   "label": "Path"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-06-04 11:06:35.018973",
+ "modified_by": "Administrator",
+ "module": "ERPNext - Custom",
+ "name": "HKM API Call",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
