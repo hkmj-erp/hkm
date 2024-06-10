@@ -30,6 +30,7 @@ def add_debug_entry(doctype, data, name=None):
             "document_type": doctype,
             "data": data,
             "document_name": name,
+            "ip": frappe.local.request_ip,
         }
     )
     doc.insert(ignore_permissions=True)
