@@ -88,37 +88,30 @@ def get_conditions(filters):
 def get_invoice_item_tax_map(invoice_list):
     import json
 
-    tax_details = frappe.db.sql(
-        """select parent as invoice, account_head, item_wise_tax_detail
-		from `tabSales Taxes and Charges` where parent in (%s)"""
-        % ", ".join(["%s"] * len(invoice_list)),
-        tuple(inv for inv in invoice_list),
-    )
-
     invoices_data = {}
 
-    slabs = {}
+    if len(invoice_list) > 0:
+        invoices_str = ",".join(["'%s'" % (inv) for inv in invoice_list])
+        tax_details = frappe.db.sql(
+            f"""select parent as invoice, account_head, item_wise_tax_detail
+            from `tabSales Taxes and Charges` where parent in ({invoices_str})"""
+        )
+        for invoice, account_head, item_wise_tax_detail in tax_details:
+            if invoice not in invoices_data:
+                invoices_data.setdefault(invoice, {})
 
-    for invoice, account_head, item_wise_tax_detail in tax_details:
-        if invoice not in invoices_data:
-            invoices_data.setdefault(invoice, {})
+            tax_detail = json.loads(item_wise_tax_detail)
+            gst_type = get_gst_type(account_head)
 
-        tax_detail = json.loads(item_wise_tax_detail)
-        gst_type = get_gst_type(account_head)
-
-        if gst_type is None:
-            continue
-        for item in tax_detail:
-            if item not in invoices_data[invoice]:
-                invoices_data[invoice].setdefault(item, {})
-            if tax_detail[item][1] > 0:
-                invoices_data[invoice][item][
-                    gstr(gst_type, tax_detail[item][0])
-                ] = tax_detail[item][1]
-        if invoice == "TSFJ-2311-0072-1":
-            frappe.errprint("Item De")
-            frappe.errprint(tax_detail)
-            frappe.errprint(invoices_data[invoice])
+            if gst_type is None:
+                continue
+            for item in tax_detail:
+                if item not in invoices_data[invoice]:
+                    invoices_data[invoice].setdefault(item, {})
+                if tax_detail[item][1] > 0:
+                    invoices_data[invoice][item][
+                        gstr(gst_type, tax_detail[item][0])
+                    ] = tax_detail[item][1]
 
     return invoices_data
 
@@ -153,6 +146,8 @@ def get_invoices(filters):
         list(set([inv[0] for inv in invoices_data]))
     )
 
+    frappe.errprint(inv_item_tax_map)
+
     invoices = {}
 
     for (
@@ -183,9 +178,6 @@ def get_invoices(filters):
         item_taxes = inv_item_tax_map[invoice_no][
             item_name if not item_code else item_code
         ]
-        frappe.errprint(invoice_no)
-        frappe.errprint(item_name if not item_code else item_code)
-        frappe.errprint(item_taxes)
 
         # Tax Free Item
         if not item_taxes:
@@ -194,7 +186,11 @@ def get_invoices(filters):
             )
             invoices[invoice_no]["taxes"]["IGST-0.0"]["taxable"] += taxable
 
-            if gst_hsn_code not in invoices[invoice_no]["taxes"]["IGST-0.0"]["hsns"]:
+            if (
+                gst_hsn_code
+                and gst_hsn_code
+                not in invoices[invoice_no]["taxes"]["IGST-0.0"]["hsns"]
+            ):
                 invoices[invoice_no]["taxes"]["IGST-0.0"]["hsns"].append(gst_hsn_code)
 
         # With Tax Items
@@ -203,12 +199,11 @@ def get_invoices(filters):
                 invoices[invoice_no]["taxes"].setdefault(
                     gtype, {"hsns": [], "taxable": 0, "tax": 0, "tax_rate": 0}
                 )
-            if gst_hsn_code not in invoices[invoice_no]["taxes"][gtype]["hsns"]:
+            if (
+                gst_hsn_code
+                and gst_hsn_code not in invoices[invoice_no]["taxes"][gtype]["hsns"]
+            ):
                 invoices[invoice_no]["taxes"][gtype]["hsns"].append(gst_hsn_code)
-            frappe.errprint("Inside")
-            frappe.errprint(taxable)
-            frappe.errprint(gtype)
-            frappe.errprint(item_taxes[gtype])
             invoices[invoice_no]["taxes"][gtype]["taxable"] += taxable
             invoices[invoice_no]["taxes"][gtype]["tax"] += item_taxes[gtype]
             frappe.errprint(invoices[invoice_no]["taxes"][gtype]["tax"])
