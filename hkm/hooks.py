@@ -139,7 +139,7 @@ override_doctype_class = {
     "Sales Invoice": "hkm.erpnext___custom.overrides.HKMSalesInvoice.HKMSalesInvoice",
     "Journal Entry": "hkm.erpnext___custom.overrides.HKMJournalEntry.HKMJournalEntry",
     "Material Request": "hkm.erpnext___custom.overrides.HKMMaterialRequest.HKMMaterialRequest",
-    "Purchase Order": "hkm.erpnext___custom.overrides.HKMPurchaseOrder.HKMPurchaseOrder",
+    "Purchase Order": "hkm.erpnext___custom.overrides.purchase_order.HKMPurchaseOrder.HKMPurchaseOrder",
     "Purchase Invoice": "hkm.erpnext___custom.overrides.HKMPurchaseInvoice.HKMPurchaseInvoice",
 }
 

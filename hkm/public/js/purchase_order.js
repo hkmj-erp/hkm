@@ -18,9 +18,6 @@ frappe.ui.form.on("Purchase Order Item", {
     let row = frappe.get_doc(cdt, cdn);
     if (row.item_code) {
       frappe.db.get_doc("Item", row.item_code).then((doc) => {
-        console.log(doc);
-        // var child = locals[cdt][cdn];
-
         if (doc.is_fixed_asset == 1) {
           row.item_type = "Asset";
         } else if (doc.is_stock_item == 1) {
