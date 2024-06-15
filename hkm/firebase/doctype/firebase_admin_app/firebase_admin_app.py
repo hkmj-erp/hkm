@@ -7,6 +7,17 @@ from frappe.model.document import Document
 
 
 class FirebaseAdminApp(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        app_title: DF.Data
+        private_key_file: DF.Attach
+    # end: auto-generated types
     @property
     def instance(self):
         if self.name not in firebase_admin._apps:

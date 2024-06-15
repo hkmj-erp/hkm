@@ -17,13 +17,12 @@ class AppNotification(Document):
         from frappe.types import DF
 
         app: DF.Link
+        channel: DF.Link | None
         is_route: DF.Check
         message: DF.Text
-        notify: DF.Check
         read: DF.Check
         route: DF.Data | None
         subject: DF.Data
-        tag: DF.Data | None
         user: DF.Link
     # end: auto-generated types
     def after_insert(self):
@@ -32,8 +31,8 @@ class AppNotification(Document):
         #     "Dhananjaya Settings",
         #     "mobile_app_notifications",
         # )
-        mobile_app_notifications = 1
-        if self.notify and mobile_app_notifications:
+        # mobile_app_notifications = 1
+        if self.channel and not frappe.db.exists("User Unsubscribe", {"user": self.user, "channel": self.channel}):
             self.send_app_notification()
 
     def send_app_notification(self):
@@ -44,9 +43,6 @@ class AppNotification(Document):
         )
         if len(tokens) > 0:
             # See documentation on defining a message payload.
-            # frappe.errprint(self.message)
-            # frappe.errprint(str(self.is_route))
-            # frappe.errprint(self.route)
             message = messaging.MulticastMessage(
                 notification=messaging.Notification(
                     title=self.subject,

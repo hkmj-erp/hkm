@@ -1,39 +1,45 @@
 {
  "actions": [],
- "autoname": "field:app_title",
- "creation": "2023-09-18 09:27:13.935213",
- "default_view": "List",
+ "allow_rename": 1,
+ "autoname": "format:{app}-{channel_name}",
+ "creation": "2024-06-15 15:39:05.582764",
  "doctype": "DocType",
- "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "app_title",
-  "private_key_file"
+  "active",
+  "app",
+  "channel_name"
  ],
  "fields": [
   {
-   "fieldname": "app_title",
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active"
+  },
+  {
+   "fieldname": "channel_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "App Title",
+   "label": "Channel Name",
    "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "private_key_file",
-   "fieldtype": "Attach",
-   "in_list_view": 1,
-   "label": "Private Key File",
+   "fieldname": "app",
+   "fieldtype": "Link",
+   "label": "App",
+   "options": "Firebase Admin App",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-06-15 16:08:38.967319",
+ "modified": "2024-06-15 16:11:17.855228",
  "modified_by": "Administrator",
  "module": "Firebase",
- "name": "Firebase Admin App",
- "naming_rule": "By fieldname",
+ "name": "Notification Channel",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
