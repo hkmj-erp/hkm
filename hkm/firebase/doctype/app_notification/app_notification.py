@@ -24,15 +24,15 @@ class AppNotification(Document):
         route: DF.Data | None
         subject: DF.Data
         user: DF.Link
+
     # end: auto-generated types
     def after_insert(self):
-        # TODO Review this as it can't be dependent on Dhananjaya App.
-        # mobile_app_notifications = frappe.db.get_single_value(
-        #     "Dhananjaya Settings",
-        #     "mobile_app_notifications",
-        # )
-        # mobile_app_notifications = 1
-        if self.channel and not frappe.db.exists("User Unsubscribe", {"user": self.user, "channel": self.channel}):
+        if not (
+            self.channel
+            and frappe.db.exists(
+                "User Unsubscribe", {"user": self.user, "channel": self.channel}
+            )
+        ):
             self.send_app_notification()
 
     def send_app_notification(self):
