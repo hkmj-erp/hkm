@@ -104,19 +104,21 @@
                 <td class="text-left">{{ d.item_name }}</td>
                 <td class="text-center">{{ d.qty }} {{ d.uom }}</td>
                 <td class="text-center">
-                  {{ frappe.utils.fmt_money(d.rate, currency=currency) }}
+                  {{ frappe.utils.fmt_money(d.rate, currency=currency, precision
+                  = 0) }}
                 </td>
                 <td class="text-right">
-                  {{ frappe.utils.fmt_money(d.amount, currency=currency) }}
+                  {{ frappe.utils.fmt_money(d.amount, currency=currency,
+                  precision = 0) }}
                 </td>
               </tr>
               {% endfor %}
               <tr>
                 <td class="text-right" colspan="2"></td>
-                <td class="text-center">{{ _('GST/Extra') }}</td>
+                <td class="text-center">{{ _('Taxes/Extra') }}</td>
                 <td class="text-right">
                   {{ frappe.utils.fmt_money(doc.base_total_taxes_and_charges or
-                  '', currency=currency) }}
+                  '', currency=currency, precision = 0) }}
                 </td>
               </tr>
               <tr class="table-primary">
@@ -125,7 +127,7 @@
                 </td>
                 <td class="text-right highlight">
                   {{ frappe.utils.fmt_money(doc.grand_total or '',
-                  currency=currency) }}
+                  currency=currency, precision = 0) }}
                 </td>
               </tr>
             </tbody>
