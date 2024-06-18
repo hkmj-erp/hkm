@@ -1,4 +1,7 @@
 from datetime import date
+from hkm.erpnext___custom.overrides.purchase_order.whatsapp import (
+    send_whatsapp_approval,
+)
 from frappe.model.document import Document
 from frappe.model.workflow import get_workflow_name
 from frappe.workflow.doctype.workflow_action.workflow_action import (
@@ -62,7 +65,13 @@ def assign_and_notify_next_authority(doc):
             frappe.throw("Next authority is not Found. Please check ALM.")
         close_assignments(doc)
         assign_to_next_approving_authority(doc, user)
-        send_approval_email(doc, user)
+        po_approval_settings = frappe.get_cached_doc("HKM General Settings")
+        mobile_no = frappe.get_value("User", user, "mobile_no")
+        if po_approval_settings.po_approval_on_whatsapp and mobile_no:
+            allowed_options = get_allowed_options(user, doc)
+            send_whatsapp_approval(doc, user, mobile_no, allowed_options)
+        else:
+            send_email_approval(doc, user)
 
     if current_state == "Final Level Approved":
         close_assignments(doc, remove=True)
@@ -87,7 +96,7 @@ def assign_to_next_approving_authority(doc, user):
     return
 
 
-def send_approval_email(doc, user):
+def send_email_approval(doc, user):
     currency = frappe.get_cached_value("Company", doc.company, "default_currency")
     allowed_options = get_allowed_options(user, doc)
     template_data = {
@@ -102,7 +111,7 @@ def send_approval_email(doc, user):
     email_args = {
         "recipients": [user],
         "message": frappe.render_template(
-            "hkm/erpnext___custom/overrides/purchase_order/approval_template.html",
+            "hkm/erpnext___custom/overrides/purchase_order/templates/email_template.html",
             template_data,
         ),
         "subject": "#PO :{} Approval".format(doc.name),

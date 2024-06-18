@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-18 19:51:55.162859",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "purchase_order_tab",
+  "po_approval_on_whatsapp",
+  "po_whatsapp_template",
+  "other_tab"
+ ],
+ "fields": [
+  {
+   "fieldname": "purchase_order_tab",
+   "fieldtype": "Tab Break",
+   "label": "Purchase Order Approval"
+  },
+  {
+   "default": "0",
+   "fieldname": "po_approval_on_whatsapp",
+   "fieldtype": "Check",
+   "label": "PO Approval on WhatsApp",
+   "mandatory_depends_on": "eval:doc.po_approval_on_whatsapp"
+  },
+  {
+   "fieldname": "other_tab",
+   "fieldtype": "Tab Break",
+   "label": "Other"
+  },
+  {
+   "fieldname": "po_whatsapp_template",
+   "fieldtype": "Data",
+   "label": "WhatsApp Template"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-06-18 20:03:12.894618",
+ "modified_by": "Administrator",
+ "module": "ERPNext - Custom",
+ "name": "HKM General Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
