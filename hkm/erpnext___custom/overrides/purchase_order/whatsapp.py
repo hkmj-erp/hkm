@@ -22,7 +22,7 @@ def send_message():
             "to": f"+91{cleaned_mobile}",
             "type": "template",
             "template": {
-                "name": "purchase_order_approval",
+                "name": "po_approval",
                 "language": {"code": "en"},
                 "components": [
                     {
@@ -42,14 +42,6 @@ def send_message():
                     {
                         "type": "button",
                         "index": "0",
-                        "sub_type": "url",
-                        "parameters": [
-                            {"type": "text", "text": "1qwd321we3d32"},
-                        ],
-                    },
-                    {
-                        "type": "button",
-                        "index": "1",
                         "sub_type": "url",
                         "parameters": [
                             {"type": "text", "text": "1qwd321we3d32"},

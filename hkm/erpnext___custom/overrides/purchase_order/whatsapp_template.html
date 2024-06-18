@@ -1,0 +1,169 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&family=Poppins:wght@400;600;800&display=swap");
+
+  html * {
+    font-size: 1 rem;
+    font-family: "Montserrat", sans-serif;
+    color: #000000;
+  }
+
+  thead {
+    background-color: #e0e0e0;
+  }
+
+  .highlight {
+    background-color: #18465d;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #f5d8d8;
+  }
+
+  .subheading {
+    color: indigo;
+    padding-left: 5px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  .details_column {
+    margin: 5px;
+    display: flex;
+    justify-content: start;
+    font-size: 1rem;
+  }
+
+  .action_button {
+    border-radius: 2px;
+    display: inline-block;
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 12px;
+    text-decoration: none;
+    width: 90%;
+  }
+</style>
+<div class="clearfix"></div>
+<div class="box">
+  <div class="grid-body">
+    <div class="rows text-left">
+      <div>
+        <div style="overflow-x: auto">
+          <table
+            class="table table-bordered table-hover"
+            style="table-layout: fixed; width: 100%"
+          >
+            <thead>
+              <tr>
+                <th class="text-center">{{ _("Company") }}</th>
+                <th class="text-center">{{ _("Department") }}</th>
+                <th class="text-center">{{ _("Date") }}</th>
+              </tr>
+            </thead>
+            <tbody style="font-weight: 600">
+              <tr>
+                <td class="text-center">{{ doc.company }}</td>
+                <td class="text-center">{{ doc.department }}</td>
+                <td class="text-center">{{ doc.transaction_date }}</td>
+              </tr>
+            </tbody>
+            <thead>
+              <tr>
+                <th class="text-center">{{ _("Number") }}</th>
+                <th class="text-center">{{ _("Supplier") }}</th>
+                <th class="text-center">{{ _("Status") }}</th>
+              </tr>
+            </thead>
+            <tbody style="font-weight: 600">
+              <tr>
+                <td class="text-center">{{ doc.name }}</td>
+                <td class="text-center">{{ doc.supplier_name }}</td>
+                <td class="text-center">{{ doc.workflow_state }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Item Details section -->
+      <div>
+        <p class="subheading">⚞ {{ _("Item Details") }}</p>
+        <div style="overflow-x: auto">
+          <table
+            class="table table-bordered table-hover"
+            style="table-layout: fixed"
+          >
+            <thead>
+              <tr>
+                <th class="text-left" style="width: 40%">{{ _("Item") }}</th>
+                <th class="text-center" style="width: 10%">{{ _("Qty") }}</th>
+                <th class="text-center" style="width: 20%">{{ _("Rate") }}</th>
+                <th class="text-right" style="width: 30%">{{ _("Price") }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in doc.items %}
+              <tr>
+                <td class="text-left">{{ d.item_name }}</td>
+                <td class="text-center">{{ d.qty }} {{ d.uom }}</td>
+                <td class="text-center">
+                  {{ frappe.utils.fmt_money(d.rate, currency=currency, precision
+                  = 0) }}
+                </td>
+                <td class="text-right">
+                  {{ frappe.utils.fmt_money(d.amount, currency=currency,
+                  precision = 0) }}
+                </td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td class="text-right" colspan="2"></td>
+                <td class="text-center">{{ _('Taxes/Extra') }}</td>
+                <td class="text-right">
+                  {{ frappe.utils.fmt_money(doc.base_total_taxes_and_charges or
+                  '', currency=currency, precision = 0) }}
+                </td>
+              </tr>
+              <tr class="table-primary">
+                <td class="text-right highlight" colspan="3">
+                  {{ _('Grand Total') }}
+                </td>
+                <td class="text-right highlight">
+                  {{ frappe.utils.fmt_money(doc.grand_total or '',
+                  currency=currency, precision = 0) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="subheading">⚞ {{ _("Extra Description") }}</p>
+        <p style="padding-left: 10px">{{ doc.extra_description }}</p>
+      </div>
+      <hr />
+      <div>
+        <p class="subheading">⚞ {{ _("Applicable ALM") }}</p>
+        <table
+          class="table table-bordered table-hover"
+          style="table-layout: fixed; width: 100%"
+        >
+          <thead>
+            <tr>
+              <th class="text-center">{{ _("Recommender") }}</th>
+              <th class="text-center">{{ _("First Approver") }}</th>
+              <th class="text-center">{{ _("Final Approver") }}</th>
+            </tr>
+          </thead>
+          <tbody style="font-weight: 600">
+            <tr>
+              <td class="text-center">{{ doc.recommended_by }}</td>
+              <td class="text-center">{{ doc.first_approving_authority }}</td>
+              <td class="text-center">{{ doc.final_approving_authority }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
