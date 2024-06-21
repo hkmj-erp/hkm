@@ -65,9 +65,8 @@ def assign_and_notify_next_authority(doc):
             frappe.throw("Next authority is not Found. Please check ALM.")
         close_assignments(doc)
         assign_to_next_approving_authority(doc, user)
-        po_approval_settings = frappe.get_cached_doc("HKM General Settings")
         mobile_no = frappe.get_value("User", user, "mobile_no")
-        if po_approval_settings.po_approval_on_whatsapp and mobile_no:
+        if is_eligible_to_send_on_whatsapp(user, mobile_no):
             allowed_options = get_allowed_options(user, doc)
             send_whatsapp_approval(doc, user, mobile_no, allowed_options)
         else:
@@ -77,6 +76,18 @@ def assign_and_notify_next_authority(doc):
         close_assignments(doc, remove=True)
     frappe.db.commit()
     return
+
+
+def is_eligible_to_send_on_whatsapp(user, mobile_no):
+    user_meta = frappe.get_meta("User")
+
+    if user_meta.has_field("purchase_order_whatsapp_approval"):
+        if not frappe.get_value("User", user, "purchase_order_whatsapp_approval"):
+            return False
+    po_approval_settings = frappe.get_cached_doc("HKM General Settings")
+    if po_approval_settings.po_approval_on_whatsapp and mobile_no:
+        return True
+    return False
 
 
 def assign_to_next_approving_authority(doc, user):

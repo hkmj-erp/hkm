@@ -149,20 +149,9 @@ override_doctype_class = {
 
 doc_events = {
     "*": {
-        "before_insert": "hkm.generic_doctype_events.before_insert",
-        "before_cancel": "hkm.generic_doctype_events.before_cancel",
-        "before_save": "hkm.generic_doctype_events.before_save",
-        "after_insert": "hkm.generic_doctype_events.after_insert",
-        "before_validate": "hkm.generic_doctype_events.before_validate",
-        "validate": "hkm.generic_doctype_events.validate",
-        "on_update": "hkm.generic_doctype_events.on_update",
-        "before_submit": "hkm.generic_doctype_events.before_submit",
-        "on_submit": "hkm.generic_doctype_events.on_submit",
-        "on_cancel": "hkm.generic_doctype_events.on_cancel",
-        "on_trash": "hkm.generic_doctype_events.on_trash",
-        "after_delete": "hkm.generic_doctype_events.after_delete",
-        "before_update_after_submit": "hkm.generic_doctype_events.before_update_after_submit",
-        "on_update_after_submit": "hkm.generic_doctype_events.on_update_after_submit",
+        "before_insert": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
+        "before_cancel": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
+        "before_save": "hkm.erpnext___custom.letterhead.letterhead_query",
     },
     "Task": {"on_update": "hkm.erpnext___custom.task_notification.query"},
     "Sales Invoice": {

@@ -9,4 +9,3 @@ Bhakta Training
 Divine Dishes
 Firebase
 Security
-WhatsApp
