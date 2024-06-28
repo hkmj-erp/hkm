@@ -141,6 +141,7 @@ override_doctype_class = {
     "Material Request": "hkm.erpnext___custom.overrides.HKMMaterialRequest.HKMMaterialRequest",
     "Purchase Order": "hkm.erpnext___custom.overrides.purchase_order.HKMPurchaseOrder.HKMPurchaseOrder",
     "Purchase Invoice": "hkm.erpnext___custom.overrides.HKMPurchaseInvoice.HKMPurchaseInvoice",
+    "Payment Entry": "hkm.erpnext___custom.overrides.HKMPaymentEntry.HKMPaymentEntry",
 }
 
 # Document Events
@@ -188,10 +189,7 @@ scheduler_events = {
         "hkm.erpnext___custom.doctype.hkm_redirect.hkm_redirect.delete_temporary_short_links",
         "hkm.firebase.doctype.app_notification.app_notification.delete_old_app_notifications",
     ],
-    "cron": {
-        "15 20 * * *": ["hkm.divine_dishes.tasks.every_day_evening"],
-        # "48 16 * * *": ["hkm.erpnext___custom.extend.hr.operations.get_chekins"],
-    },
+    "cron": {"15 20 * * *": ["hkm.divine_dishes.tasks.every_day_evening"]},
 }
 
 # scheduler_events = {

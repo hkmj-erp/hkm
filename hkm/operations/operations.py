@@ -1,15 +1,323 @@
 import json
 import re
+import time
+from warnings import filters
 from dhananjaya.dhananjaya.api.v3.marketing.identify import identify_donor
 from dhananjaya.dhananjaya.utils import get_best_contact_address
+from erpnext.accounts.utils import get_balance_on
 import frappe
 from datetime import date
 from frappe import enqueue
-from frappe.utils.nestedset import get_descendants_of
+from frappe.utils.nestedset import NestedSetChildExistsError, get_descendants_of
 from frappe.utils import add_to_date, now
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
-import calendar
+import calendar, time
+
+
+def bring_back():
+    doctypes = [
+        "Dhananjaya Settings",
+        "Firebase Admin App",
+        "Navbar Settings",
+        "Domain Settings",
+        "Website Settings",
+        "Letter Head",
+    ]
+    for d in doctypes:
+        for f in frappe.get_all(
+            "File",
+            pluck="name",
+            filters={"attached_to_doctype": d, "dfp_external_storage": ["is", "set"]},
+        ):
+            doc = frappe.get_doc("File", f)
+            doc.dfp_external_storage = None
+            try:
+                doc.save()
+                frappe.db.commit()
+            except Exception as e:
+                print(e)
+                continue
+
+
+def set_missing_files():
+    for f in frappe.get_all(
+        "File",
+        filters={
+            "file_size": 0,
+            "dfp_external_storage": ["is", "not set"],
+            "is_folder": 0,
+        },
+        fields=["name", "file_url", "file_name"],
+        # limit=50,
+    ):
+        print(f"Processing {f['name']}")
+        if "http" not in f["file_url"]:
+            print(f"Redesingning {f['name']}")
+            try:
+                similar_file = frappe.get_doc("File", {"file_name": f["file_name"]})
+                frappe.db.set_value(
+                    "File", f["name"], "file_url", similar_file.file_url
+                )
+                frappe.db.commit()
+            except Exception as e:
+                print(f"""File : {f["name"]} Not Found""")
+                continue
+
+
+def files_migrate1():
+    index = 0
+    for f in frappe.get_all(
+        "File",
+        pluck="name",
+        limit=200,
+        filters={
+            "dfp_external_storage": ["is", "not set"],
+            "attached_to_doctype": ["!=", "Prepared Report"],
+        },
+    ):
+        index += 1
+        print(f"Processing {index}")
+        doc = frappe.get_doc("File", f)
+        doc.dfp_external_storage = "DFP.ES.hkmjaipur.240628.271012"
+        try:
+            doc.save()
+            frappe.db.commit()
+        except OSError as e:
+            print(e)
+
+
+def files_migrate():
+    index = 0
+    for f in frappe.get_all(
+        "File",
+        pluck="name",
+        filters={
+            "dfp_external_storage": ["is", "not set"],
+            "attached_to_doctype": [
+                "not in",
+                ["Prepared Report", "Repost Item Valuation", "Data Import"],
+            ],
+            "file_size": ["!=", 0],
+        },
+        # limit=10000,
+    ):
+        index += 1
+        print(f"Processing {index} : {f}")
+        doc = frappe.get_doc("File", f)
+        doc.dfp_external_storage = "DFP.ES.hkmjaipur.240628.271012"
+        try:
+            doc.save()
+            frappe.db.commit()
+        except OSError as e:
+            print(e)
+        except frappe.exceptions.CharacterLengthExceededError as e:
+            print(e)
+        except frappe.exceptions.LinkValidationError as e:
+            print(e)
+        except frappe.exceptions.ValidationError as e:
+            print(e)
+        except Exception as e:
+            print(f"file Number : {f}")
+            raise e
+
+
+def repost():
+    errros = []
+    index = 0
+    for j in frappe.get_all(
+        "Journal Entry", filters={"docstatus": 1, "repost_required": 1}
+    ):
+        index += 1
+        print(f"Reposting {index}: {j}")
+        doc = frappe.get_doc("Journal Entry", j)
+        try:
+            doc.repost_accounting_entries()
+        except Exception as e:
+            errros.append(e)
+        frappe.db.commit()
+    print(errros)
+
+
+def set_direct_cost_centers():
+    for je in frappe.db.sql(
+        f"""
+               SELECT
+                    tje.name,
+                    JSON_ARRAYAGG(
+                                        JSON_OBJECT(
+                                            'jea_name', tjea.name,
+                                            'new_cost_center', tpi.cost_center,
+                                            'pi_name', tpi.name
+                                        )
+                                    ) AS data
+                FROM
+                    `tabJournal Entry` tje
+                JOIN `tabJournal Entry Account` tjea ON
+                    tjea.parent = tje.name
+                JOIN `tabPurchase Invoice` tpi 
+                                                    ON
+                    tjea.reference_name = tpi.name
+                WHERE
+                    tpi.company = 'Touchstone Foundation Jaipur'
+                    AND tpi.cost_center IS NOT NULL
+                    AND tpi.cost_center != ""
+                    AND tjea.cost_center != tpi.cost_center
+                    AND tje.docstatus = 1
+                GROUP BY
+                    tje.name
+                LIMIT 100
+                    """,
+        as_dict=1,
+    ):
+        print(f"Processing {je['name']}")
+        json_data = json.loads(je["data"])
+        account_map = {}
+        for d in json_data:
+            account_map.setdefault(d["jea_name"], d["new_cost_center"])
+
+        for d in json_data:
+            frappe.db.set_value(
+                "Journal Entry Account",
+                d["jea_name"],
+                "cost_center",
+                account_map[d["jea_name"]],
+            )
+        for d in json_data:
+            frappe.db.set_value(
+                "Journal Entry Account",
+                d["jea_name"],
+                "cost_center",
+                account_map[d["jea_name"]],
+            )
+
+
+def set_cost_centers():
+    jes = frappe.db.sql(
+        f"""
+               SELECT
+                    tje.name,
+                    JSON_ARRAYAGG(
+                                        JSON_OBJECT(
+                                            'jea_name', tjea.name,
+                                            'new_cost_center', tpi.cost_center,
+                                            'account', tjea.account
+                                        )
+                                    ) AS data
+                FROM
+                    `tabJournal Entry` tje
+                JOIN `tabJournal Entry Account` tjea ON
+                    tjea.parent = tje.name
+                JOIN `tabPurchase Invoice` tpi 
+                                                    ON
+                    tjea.reference_name = tpi.name
+                JOIN `tabSupplier` ts
+                    ON ts.name = tpi.supplier
+                WHERE
+                    tpi.company = 'Touchstone Foundation Jaipur'
+                    AND tpi.cost_center IS NOT NULL
+                    AND tpi.cost_center != ""
+                    AND tjea.cost_center != tpi.cost_center
+                    AND tje.docstatus = 1
+                    AND ts.disabled = 0
+                GROUP BY
+                    tje.name
+                    """,
+        as_dict=1,
+    )
+    length = len(jes)
+    errors = []
+    for index, je in enumerate(jes):
+        print(f"Processing {index+1}/{length} : {je['name']}")
+        json_data = json.loads(je["data"])
+        account_map = {}
+        for d in json_data:
+            account_map.setdefault(d["jea_name"], d["new_cost_center"])
+        je_doc = frappe.get_doc("Journal Entry", je["name"])
+        for a in je_doc.accounts:
+            if a.name in account_map:
+                a.cost_center = account_map[a.name]
+        try:
+            je_doc.save()
+            je_doc.repost_accounting_entries()
+            frappe.db.commit()
+        except Exception as e:
+            errors.append(e)
+            continue
+            # print(str(e))
+            # if "Cannot create accounting entries against disabled accounts" in str(e):
+            #     account_name = str(e).split(": ")[-1]
+            #     frappe.db.set_value("Account", account_name, "disabled", "0")
+            #     frappe.db.commit()
+            #     je_doc.save()
+            # else:
+            #     raise e
+    print(errors)
+
+
+def divide_list(lst, n):
+    """Divide the list `lst` into sublists of size `n`."""
+    return [lst[i : i + n] for i in range(0, len(lst), n)]
+
+
+def reconcile_payments():
+    from erpnext.accounts.doctype.process_payment_reconciliation.process_payment_reconciliation import (
+        trigger_job_for_doc,
+    )
+
+    entries = frappe.get_all(
+        "Process Payment Reconciliation", pluck="name", filters={"status": "Queued"}
+    )
+    # sublists = divide_list(entries, 5)
+    # for lst in sublists:
+    #     for e in lst:
+    #         trigger_job_for_doc(e)
+    #     print("List Done")
+    #     frappe.db.commit()
+    #     time.sleep(20)
+    for e in entries:
+        trigger_job_for_doc(e)
+        frappe.db.commit()
+        time.sleep(20)
+
+
+def add_cleaning_task():
+    frappe.enqueue(clean_accounts, queue="long", timeout=100000)
+
+
+def clean_accounts():
+    unused_accounts = frappe.db.sql(
+        """
+        SELECT acc.name, COUNT(gl.name) as count, MAX(gl.posting_date) as last
+        FROM `tabAccount` acc
+        LEFT JOIN  `tabGL Entry` gl
+            ON gl.account = acc.name
+        WHERE 1
+        AND acc.is_group = 0
+        AND acc.disabled = 0
+        GROUP BY acc.name
+        HAVING ( count = 0 OR last < DATE_SUB(CURDATE(), INTERVAL 1 YEAR) )
+        """,
+        as_dict=1,
+    )
+    # print(unused_accounts)
+    length = len(unused_accounts)
+    for ind, u in enumerate(unused_accounts):
+        print(f"Processing : {ind+1}/{length} {u.name}")
+        if u.count != 0:
+            balance = get_balance_on(account=u.name)
+            if balance == 0:
+                print("Zero Balance")
+                frappe.db.set_value("Account", u.name, "disabled", 1)
+        else:
+            print("Deleting")
+            try:
+                frappe.delete_doc("Account", u.name, delete_permanently=True)
+            except NestedSetChildExistsError as e:
+                print("Nested Error " + str(e))
+            except Exception as e:
+                print("OTEHER ERROR " + str(e))
+    frappe.db.commit()
 
 
 def set_proper_donors():
@@ -32,9 +340,12 @@ def set_proper_donors():
             address, contact, _ = get_best_contact_address(donor["name"])
             one_map.setdefault(
                 str(donor["old_trust_code"]),
-                {"name": donor["name"], 
-                 "full_name":donor["full_name"],
-                 "contact": contact, "address": address},
+                {
+                    "name": donor["name"],
+                    "full_name": donor["full_name"],
+                    "contact": contact,
+                    "address": address,
+                },
             )
         old_donor_id_map.setdefault(d["old_donor_id"], one_map)
         # old_donor_id_map.setdefault(
@@ -53,7 +364,8 @@ def set_proper_donors():
     print("_______________________________")
     print("_______________________________")
     i = 0
-    for receipt in frappe.db.sql("""
+    for receipt in frappe.db.sql(
+        """
                     SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.donor,donor.old_donor_id 
                     FROM `tabDonation Receipt` tdr
                     JOIN `tabDhananjaya Import Settings Company` tdis
@@ -61,24 +373,32 @@ def set_proper_donors():
                     JOIN `tabDonor` donor
                     ON donor.name = tdr.donor
                     WHERE 1
-                    """,as_dict=1):
+                    """,
+        as_dict=1,
+    ):
         i += 1
         print(f"Receipt Task {i}")
-        if receipt['old_donor_id'] in old_donor_id_map:
-            required_donor = old_donor_id_map[receipt['old_donor_id']][str(receipt["old_trust_code"])]
-            if receipt['donor'] != required_donor["name"]:
-                frappe.db.set_value('Donation Receipt', receipt['name'], {
-                    'donor': required_donor["name"],
-                    'full_name': required_donor["full_name"],
-                    'contact':required_donor["contact"],
-                    'address':required_donor["address"]
-                })
-        
-        if i%1000 == 0:
+        if receipt["old_donor_id"] in old_donor_id_map:
+            required_donor = old_donor_id_map[receipt["old_donor_id"]][
+                str(receipt["old_trust_code"])
+            ]
+            if receipt["donor"] != required_donor["name"]:
+                frappe.db.set_value(
+                    "Donation Receipt",
+                    receipt["name"],
+                    {
+                        "donor": required_donor["name"],
+                        "full_name": required_donor["full_name"],
+                        "contact": required_donor["contact"],
+                        "address": required_donor["address"],
+                    },
+                )
+
+        if i % 1000 == 0:
             frappe.db.commit()
 
     frappe.db.commit()
-    
+
 
 def set_proper_patrons():
     old_patron_id_map = {}
@@ -99,8 +419,10 @@ def set_proper_patrons():
         for patron in json.loads("[" + d["names"] + "]"):
             one_map.setdefault(
                 str(patron["old_trust_code"]),
-                {"name": patron["name"], 
-                 "patron_name":patron["full_name"],},
+                {
+                    "name": patron["name"],
+                    "patron_name": patron["full_name"],
+                },
             )
         old_patron_id_map.setdefault(d["old_patron_id"], one_map)
         # old_donor_id_map.setdefault(
@@ -119,7 +441,8 @@ def set_proper_patrons():
     print("_______________________________")
     print("_______________________________")
     i = 0
-    for receipt in frappe.db.sql("""
+    for receipt in frappe.db.sql(
+        """
                     SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.patron,patron.old_patron_id 
                     FROM `tabDonation Receipt` tdr
                     JOIN `tabDhananjaya Import Settings Company` tdis
@@ -127,18 +450,26 @@ def set_proper_patrons():
                     JOIN `tabPatron` patron
                     ON patron.name = tdr.patron
                     WHERE 1
-                    """,as_dict=1):
+                    """,
+        as_dict=1,
+    ):
         i += 1
         print(f"Receipt Task {i}")
-        if receipt['old_patron_id'] in old_patron_id_map:
-            required_patron = old_patron_id_map[receipt['old_patron_id']][str(receipt["old_trust_code"])]
-            if receipt['patron'] != required_patron["name"]:
-                frappe.db.set_value('Donation Receipt', receipt['name'], {
-                    'patron': required_patron["name"],
-                    'patron_name': required_patron["patron_name"]
-                })
-        
-        if i%1000 == 0:
+        if receipt["old_patron_id"] in old_patron_id_map:
+            required_patron = old_patron_id_map[receipt["old_patron_id"]][
+                str(receipt["old_trust_code"])
+            ]
+            if receipt["patron"] != required_patron["name"]:
+                frappe.db.set_value(
+                    "Donation Receipt",
+                    receipt["name"],
+                    {
+                        "patron": required_patron["name"],
+                        "patron_name": required_patron["patron_name"],
+                    },
+                )
+
+        if i % 1000 == 0:
             frappe.db.commit()
 
     frappe.db.commit()

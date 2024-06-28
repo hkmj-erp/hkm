@@ -17,10 +17,13 @@ class FirebaseAdminApp(Document):
 
         app_title: DF.Data
         private_key_file: DF.Attach
+
     # end: auto-generated types
     @property
     def instance(self):
         if self.name not in firebase_admin._apps:
-            cred = firebase_admin.credentials.Certificate(frappe.get_site_path() + self.private_key_file)
+            cred = firebase_admin.credentials.Certificate(
+                frappe.get_site_path() + self.private_key_file
+            )
             firebase_admin.initialize_app(cred, name=self.name)
         return firebase_admin._apps.get(self.name)
