@@ -101,6 +101,8 @@ def send_whatsapp(
 
     response = requests.request("POST", url, headers=headers, data=payload)
 
+    print(response.text)
+
 
 def get_approval_link(doc, user, allowed_options):
     if "Recommend" in allowed_options:

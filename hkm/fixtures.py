@@ -4,6 +4,9 @@
 ### This file has to be dynamically changed everytime, we need to send some customisations to other sites.
 
 custom_fixtures = [
+    # "S3 Backup Settings",
+    # "DFP External Storage",
+    # "DFP External Storage"
     # "Sadhana Parameter",
     # "SMS Settings"
     # "DJ Receipt Format"
