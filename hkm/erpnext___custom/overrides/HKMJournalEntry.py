@@ -141,33 +141,6 @@ def get_journal_entry_from_statement(statement):
 
 
 @frappe.whitelist()
-def get_payment_entry_from_statement(statement):
-    bank_transaction = frappe.get_doc("Bank Transaction", statement)
-    company_account = frappe.get_value(
-        "Bank Account", bank_transaction.bank_account, "account"
-    )
-    account_currency = frappe.get_value("Account", company_account, "account_currency")
-
-    payment_entry_dict = frappe._dict(
-        company=bank_transaction.company,
-        payment_type="Pay",
-        party_type="Supplier",
-        paid_from=company_account,
-        paid_amount=bank_transaction.withdrawal,
-        received_amount=bank_transaction.withdrawal,
-        paid_from_account_currency=account_currency,
-        posting_date=bank_transaction.date,
-        bank_statement_name=bank_transaction.name,
-        reference_no=bank_transaction.description,
-        reference_date=bank_transaction.date,
-    )
-
-    payment_entry = frappe.new_doc("Payment Entry")
-    payment_entry.update(payment_entry_dict)
-    return payment_entry
-
-
-@frappe.whitelist()
 def unallocate_bank_transaction(je):
     je_doc = frappe.get_doc("Journal Entry", je)
     if not je_doc.bank_statement_name:

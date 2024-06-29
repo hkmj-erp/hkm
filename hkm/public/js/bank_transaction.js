@@ -22,7 +22,7 @@ frappe.ui.form.on("Bank Transaction", {
       function () {
         frappe.call({
           method:
-            "hkm.erpnext___custom.overrides.HKMJournalEntry.get_payment_entry_from_statement",
+            "hkm.erpnext___custom.overrides.HKMPaymentEntry.get_payment_entry_from_statement",
           args: {
             statement: frm.doc.name,
           },
