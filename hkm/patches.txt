@@ -7,3 +7,4 @@ hkm.patches.v_0_0.remove_bank_statement_jes
 hkm.patches.temp #4
 #hkm.patches.v_0_0.add_custom_fields_user
 hkm.patches.v_0_0.add_custom_fields_in_je_po
+hkm.patches.v_0_0.add_defaults_custom_field

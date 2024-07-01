@@ -9,8 +9,8 @@ class HKMPaymentEntry(PaymentEntry):
         self.reconcile_bank_transaction_for_entries_from_statement()
 
     def reconcile_bank_transaction_for_entries_from_statement(self):
-        # if not self.get("bank_statement_name"):
-        #     return
+        if not self.get("bank_statement_name"):
+            return
 
         bank_transaction = frappe.get_doc("Bank Transaction", self.bank_statement_name)
 
