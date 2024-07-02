@@ -141,7 +141,7 @@ override_doctype_class = {
     "Material Request": "hkm.erpnext___custom.overrides.HKMMaterialRequest.HKMMaterialRequest",
     "Purchase Order": "hkm.erpnext___custom.overrides.purchase_order.HKMPurchaseOrder.HKMPurchaseOrder",
     "Purchase Invoice": "hkm.erpnext___custom.overrides.HKMPurchaseInvoice.HKMPurchaseInvoice",
-    "Payment Entry": "hkm.erpnext___custom.overrides.HKMPaymentEntry.HKMPaymentEntry",
+    # "Payment Entry": "hkm.erpnext___custom.overrides.HKMPaymentEntry.HKMPaymentEntry",
 }
 
 # Document Events
@@ -181,6 +181,9 @@ doc_events = {
     "Purchase Receipt": {
         "validate": "hkm.erpnext___custom.extend.purchase_receipt.validate",
     },
+    "Payment Entry":{
+        "on_submit":"hkm.erpnext___custom.extend.payment_entry.on_submit"
+    }
 }
 # Scheduled Tasks
 # ---------------
