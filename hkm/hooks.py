@@ -141,6 +141,7 @@ override_doctype_class = {
     "Material Request": "hkm.erpnext___custom.overrides.HKMMaterialRequest.HKMMaterialRequest",
     "Purchase Order": "hkm.erpnext___custom.overrides.purchase_order.HKMPurchaseOrder.HKMPurchaseOrder",
     "Purchase Invoice": "hkm.erpnext___custom.overrides.HKMPurchaseInvoice.HKMPurchaseInvoice",
+    "Report": "hkm.erpnext___custom.overrides.HKMReport.HKMReport",
     # "Payment Entry": "hkm.erpnext___custom.overrides.HKMPaymentEntry.HKMPaymentEntry",
 }
 
@@ -152,7 +153,7 @@ doc_events = {
     "*": {
         "before_insert": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
         "before_cancel": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
-        "before_save": "hkm.erpnext___custom.letterhead.letterhead_query",
+        "before_save": "hkm.hooks_extend.before_save",
     },
     "Task": {"on_update": "hkm.erpnext___custom.task_notification.query"},
     "Sales Invoice": {
@@ -181,9 +182,9 @@ doc_events = {
     "Purchase Receipt": {
         "validate": "hkm.erpnext___custom.extend.purchase_receipt.validate",
     },
-    "Payment Entry":{
-        "on_submit":"hkm.erpnext___custom.extend.payment_entry.on_submit"
-    }
+    "Payment Entry": {
+        "on_submit": "hkm.erpnext___custom.extend.payment_entry.on_submit"
+    },
 }
 # Scheduled Tasks
 # ---------------

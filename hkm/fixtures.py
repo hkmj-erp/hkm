@@ -30,41 +30,38 @@ custom_fixtures = [
     #         ],
     #     ],
     # },
-    # {
-    #     "dt": "Custom Field",
-    #     "filters": [
-    #         [
-    #             "dt",
-    #             "in",
-    #             [
-    #                 # "Material Request",
-    #                 # "Purchase Order",
-    #                 # "Purchase Receipt",
-    #                 # "Purchase Invoice",
-    #                 # "Journal Entry",
-    #                 # "Customer",
-    #                 "Asset"
-    #                 # "Supplier",
-    #             ],
-    #         ],
-    #     ],
-    # },
-    # {
-    #     "dt": "Property Setter",
-    #     "filters": [
-    #         [
-    #             "doc_type",
-    #             "in",
-    #             [
-    #                 "Material Request",
-    #                 "Purchase Order",
-    #                 "Purchase Receipt",
-    #                 "Purchase Invoice",
-    #                 "Bank Transaction",
-    #             ],
-    #         ],
-    #     ],
-    # },
+    {
+        "dt": "Custom Field",
+        "filters": [
+            [
+                "dt",
+                "in",
+                [
+                    # "Material Request",
+                    # "Purchase Order",
+                    # "Purchase Receipt",
+                    "Purchase Invoice",
+                    "Sales Invoice",
+                    "Stock Entry",
+                    "Payment Entry",
+                    # "Journal Entry",
+                    # "Customer",
+                    # "Asset"
+                    # "Supplier",
+                ],
+            ],
+        ],
+    },
+    {
+        "dt": "Property Setter",
+        "filters": [
+            [
+                "doc_type",
+                "in",
+                ["Purchase Invoice", "Sales Invoice", "Stock Entry", "Payment Entry"],
+            ],
+        ],
+    },
     # {
     #     "dt": "Custom DocPerm",
     #     "filters": [
