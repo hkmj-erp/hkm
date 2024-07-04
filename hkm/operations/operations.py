@@ -15,6 +15,12 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 import calendar, time
 
 
+def create_devotee_dimension():
+    for p in frappe.get_all("LLP Preacher", pluck="name"):
+        if not frappe.db.exists("Devotee", p):
+            frappe.get_doc({"doctype": "Devotee", "name1": p}).insert()
+
+
 def bring_back():
     doctypes = [
         "Dhananjaya Settings",
