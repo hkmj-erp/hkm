@@ -11,6 +11,8 @@ relevant_documents = [
     "Purchase Receipt",
 ]
 
+import frappe
+
 
 def set_cost_center(doc, method=None):
     if doc.doctype in relevant_documents:
@@ -20,3 +22,6 @@ def set_cost_center(doc, method=None):
             if doc.get(dim):
                 for item in doc.items:
                     item.set(dim, doc.get(dim))
+                if doc.get("taxes"):
+                    for tc in doc.taxes:
+                        tc.set(dim, doc.get(dim))

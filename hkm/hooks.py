@@ -1,8 +1,6 @@
 from __future__ import unicode_literals
 from . import __version__ as app_version
-from hkm.erpnext___custom.doctype.user_company_allowed.list_view import (
-    get_applicable_documents,
-)
+
 from hkm.fixtures import custom_fixtures
 
 app_name = "hkm"
@@ -107,20 +105,6 @@ permission_query_conditions = {
     "DD Order": "hkm.divine_dishes.list_view_filter.query",
 }
 
-# For Company Filters for Particular Users
-documents = get_applicable_documents()
-
-permission_query_conditions.update(
-    dict.fromkeys(
-        documents, "hkm.erpnext___custom.doctype.user_company_allowed.list_view.query"
-    )
-)
-permission_query_conditions.update(
-    {
-        "Company": "hkm.erpnext___custom.doctype.user_company_allowed.list_view.company_specific"
-    }
-)
-
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
@@ -153,7 +137,7 @@ doc_events = {
     "*": {
         "before_insert": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
         "before_cancel": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
-        "before_save": "hkm.hooks_extend.before_save",
+        "on_update": "hkm.hooks_extend.before_save",
     },
     "Task": {"on_update": "hkm.erpnext___custom.task_notification.query"},
     "Sales Invoice": {

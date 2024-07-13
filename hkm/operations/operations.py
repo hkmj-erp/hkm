@@ -2,17 +2,108 @@ import json
 import re
 import time
 from warnings import filters
+
+from sqlalchemy import false
 from dhananjaya.dhananjaya.api.v3.marketing.identify import identify_donor
 from dhananjaya.dhananjaya.utils import get_best_contact_address
+from erpnext.accounts.doctype.process_payment_reconciliation.process_payment_reconciliation import (
+    fetch_and_allocate,
+    get_next_allocation,
+    reconcile,
+)
 from erpnext.accounts.utils import get_balance_on
 import frappe
 from datetime import date
 from frappe import enqueue
+from frappe.utils.data import nowdate
 from frappe.utils.nestedset import NestedSetChildExistsError, get_descendants_of
 from frappe.utils import add_to_date, now
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 import calendar, time
+
+
+def clean_account():
+    for a in frappe.get_all("Account", pluck="name", filters={"is_group": 0}):
+        balance = get_balance_on(account=a, date=nowdate())
+        if balance == 0:
+            try:
+                frappe.delete_doc("Account", a)
+            except Exception as e:
+                print(f"{a} : {e}")
+
+    for a in frappe.get_all("Account", pluck="name", filters={"is_group": 1}):
+        desc = get_descendants_of("Account", a)
+        if len(desc) == 0:
+            try:
+                frappe.delete_doc("Account", a)
+            except Exception as e:
+                print(f"GROUP => {a} : {e}")
+    frappe.db.commit()
+
+
+def update_ka_head():
+    doctypes = [
+        "Purchase Invoice",
+        "Purchase Invoice Item",
+        "Journal Entry Account",
+        "Payment Entry",
+        "Payment Ledger Entry",
+        "GL Entry",
+        "Stock Entry",
+    ]
+
+    for doctype in doctypes:
+        print(f"Processing  {doctype}")
+        for d in frappe.get_all(
+            doctype,
+            fields=["name", "ka_head"],
+            filters={
+                "cost_center": "Jaipur - Shri Annapurna Rasoi - TSFJ",
+                "ka_head": ["is", "set"],
+            },
+            # limit=3,
+        ):
+            frappe.db.set_value(
+                doctype,
+                d["name"],
+                {
+                    "cost_center": "KA - Shri Annapurna Rasoi - TSFJ",
+                    "ka_head": d["ka_head"],
+                },
+                update_modified=false,
+            )
+        frappe.db.commit()
+
+
+def shift_user_company_persmission():
+    for p in frappe.get_all("User Company Allowed", fields=["name", "company", "user"]):
+        if not frappe.db.exists(
+            {
+                "doctype": "User Permission",
+                "user": p["user"],
+                "allow": "Company",
+                "for_value": p["company"],
+            }
+        ):
+            frappe.get_doc(
+                {
+                    "doctype": "User Permission",
+                    "user": p["user"],
+                    "allow": "Company",
+                    "for_value": p["company"],
+                }
+            ).insert()
+        # frappe.db.commit()
+
+
+def delete_tasks_workflow():
+    i = 1
+    for f in frappe.get_all("Task", pluck="name"):
+        i += 1
+        print(f"WF : {i}")
+        frappe.delete_doc("Task", f)
+    frappe.db.commit()
 
 
 def create_devotee_dimension():
@@ -148,32 +239,32 @@ def repost():
 def set_direct_cost_centers():
     for je in frappe.db.sql(
         f"""
-               SELECT
-                    tje.name,
-                    JSON_ARRAYAGG(
-                                        JSON_OBJECT(
-                                            'jea_name', tjea.name,
-                                            'new_cost_center', tpi.cost_center,
-                                            'pi_name', tpi.name
-                                        )
-                                    ) AS data
-                FROM
-                    `tabJournal Entry` tje
-                JOIN `tabJournal Entry Account` tjea ON
-                    tjea.parent = tje.name
-                JOIN `tabPurchase Invoice` tpi 
-                                                    ON
-                    tjea.reference_name = tpi.name
-                WHERE
-                    tpi.company = 'Touchstone Foundation Jaipur'
-                    AND tpi.cost_center IS NOT NULL
-                    AND tpi.cost_center != ""
-                    AND tjea.cost_center != tpi.cost_center
-                    AND tje.docstatus = 1
-                GROUP BY
-                    tje.name
-                LIMIT 100
-                    """,
+			   SELECT
+					tje.name,
+					JSON_ARRAYAGG(
+										JSON_OBJECT(
+											'jea_name', tjea.name,
+											'new_cost_center', tpi.cost_center,
+											'pi_name', tpi.name
+										)
+									) AS data
+				FROM
+					`tabJournal Entry` tje
+				JOIN `tabJournal Entry Account` tjea ON
+					tjea.parent = tje.name
+				JOIN `tabPurchase Invoice` tpi 
+													ON
+					tjea.reference_name = tpi.name
+				WHERE
+					tpi.company = 'Touchstone Foundation Jaipur'
+					AND tpi.cost_center IS NOT NULL
+					AND tpi.cost_center != ""
+					AND tjea.cost_center != tpi.cost_center
+					AND tje.docstatus = 1
+				GROUP BY
+					tje.name
+				LIMIT 100
+					""",
         as_dict=1,
     ):
         print(f"Processing {je['name']}")
@@ -201,34 +292,34 @@ def set_direct_cost_centers():
 def set_cost_centers():
     jes = frappe.db.sql(
         f"""
-               SELECT
-                    tje.name,
-                    JSON_ARRAYAGG(
-                                        JSON_OBJECT(
-                                            'jea_name', tjea.name,
-                                            'new_cost_center', tpi.cost_center,
-                                            'account', tjea.account
-                                        )
-                                    ) AS data
-                FROM
-                    `tabJournal Entry` tje
-                JOIN `tabJournal Entry Account` tjea ON
-                    tjea.parent = tje.name
-                JOIN `tabPurchase Invoice` tpi 
-                                                    ON
-                    tjea.reference_name = tpi.name
-                JOIN `tabSupplier` ts
-                    ON ts.name = tpi.supplier
-                WHERE
-                    tpi.company = 'Touchstone Foundation Jaipur'
-                    AND tpi.cost_center IS NOT NULL
-                    AND tpi.cost_center != ""
-                    AND tjea.cost_center != tpi.cost_center
-                    AND tje.docstatus = 1
-                    AND ts.disabled = 0
-                GROUP BY
-                    tje.name
-                    """,
+			   SELECT
+					tje.name,
+					JSON_ARRAYAGG(
+										JSON_OBJECT(
+											'jea_name', tjea.name,
+											'new_cost_center', tpi.cost_center,
+											'account', tjea.account
+										)
+									) AS data
+				FROM
+					`tabJournal Entry` tje
+				JOIN `tabJournal Entry Account` tjea ON
+					tjea.parent = tje.name
+				JOIN `tabPurchase Invoice` tpi 
+													ON
+					tjea.reference_name = tpi.name
+				JOIN `tabSupplier` ts
+					ON ts.name = tpi.supplier
+				WHERE
+					tpi.company = 'Touchstone Foundation Jaipur'
+					AND tpi.cost_center IS NOT NULL
+					AND tpi.cost_center != ""
+					AND tjea.cost_center != tpi.cost_center
+					AND tje.docstatus = 1
+					AND ts.disabled = 0
+				GROUP BY
+					tje.name
+					""",
         as_dict=1,
     )
     length = len(jes)
@@ -272,19 +363,55 @@ def reconcile_payments():
     )
 
     entries = frappe.get_all(
-        "Process Payment Reconciliation", pluck="name", filters={"status": "Queued"}
+        "Process Payment Reconciliation",
+        fields=["name", "party"],
+        filters={"status": "Queued"},
     )
-    # sublists = divide_list(entries, 5)
-    # for lst in sublists:
-    #     for e in lst:
-    #         trigger_job_for_doc(e)
-    #     print("List Done")
-    #     frappe.db.commit()
-    #     time.sleep(20)
     for e in entries:
-        trigger_job_for_doc(e)
-        frappe.db.commit()
-        time.sleep(20)
+        print(f"Processing : {e['party']}")
+        reconcile_based_on_filters(e["name"])
+        # count = frappe.db.count(
+        #     "Purchase Invoice", filters={"status": "Overdue", "supplier": e["party"]}
+        # )
+        # frappe.db.commit()
+        # print(count)
+        # time.sleep(10 * count)
+
+
+def reconcile_based_on_filters(doc: None | str = None) -> None:
+    """
+    Identify current state of document and execute next tasks in background
+    """
+    if doc:
+        log = frappe.db.get_value(
+            "Process Payment Reconciliation Log", filters={"process_pr": doc}
+        )
+        if not log:
+            log = frappe.new_doc("Process Payment Reconciliation Log")
+            log.process_pr = doc
+            log.status = "Running"
+            log = log.save()
+
+            fetch_and_allocate(doc=doc)
+        else:
+            res = frappe.get_all(
+                "Process Payment Reconciliation Log",
+                filters={"name": log},
+                fields=["allocated", "reconciled"],
+                as_list=1,
+            )
+            allocated, reconciled = res[0]
+
+            if not allocated:
+                fetch_and_allocate(doc=doc)
+            elif not reconciled:
+                allocation = get_next_allocation(log)
+                reconcile(doc=doc)
+
+            elif reconciled:
+                frappe.db.set_value(
+                    "Process Payment Reconciliation", doc, "status", "Completed"
+                )
 
 
 def add_cleaning_task():
@@ -294,16 +421,16 @@ def add_cleaning_task():
 def clean_accounts():
     unused_accounts = frappe.db.sql(
         """
-        SELECT acc.name, COUNT(gl.name) as count, MAX(gl.posting_date) as last
-        FROM `tabAccount` acc
-        LEFT JOIN  `tabGL Entry` gl
-            ON gl.account = acc.name
-        WHERE 1
-        AND acc.is_group = 0
-        AND acc.disabled = 0
-        GROUP BY acc.name
-        HAVING ( count = 0 OR last < DATE_SUB(CURDATE(), INTERVAL 1 YEAR) )
-        """,
+		SELECT acc.name, COUNT(gl.name) as count, MAX(gl.posting_date) as last
+		FROM `tabAccount` acc
+		LEFT JOIN  `tabGL Entry` gl
+			ON gl.account = acc.name
+		WHERE 1
+		AND acc.is_group = 0
+		AND acc.disabled = 0
+		GROUP BY acc.name
+		HAVING ( count = 0 OR last < DATE_SUB(CURDATE(), INTERVAL 1 YEAR) )
+		""",
         as_dict=1,
     )
     # print(unused_accounts)
@@ -331,12 +458,12 @@ def set_proper_donors():
     i = 0
     for d in frappe.db.sql(
         """
-                SELECT old_donor_id,GROUP_CONCAT(JSON_OBJECT('name',name,'full_name',full_name,'old_trust_code',old_trust_code)) as names
-                FROM `tabDonor` 
-                WHERE 1
-                GROUP BY old_donor_id 
-                HAVING count(*) > 1
-                    """,
+				SELECT old_donor_id,GROUP_CONCAT(JSON_OBJECT('name',name,'full_name',full_name,'old_trust_code',old_trust_code)) as names
+				FROM `tabDonor` 
+				WHERE 1
+				GROUP BY old_donor_id 
+				HAVING count(*) > 1
+					""",
         as_dict=1,
     ):
         i = i + 1
@@ -372,14 +499,14 @@ def set_proper_donors():
     i = 0
     for receipt in frappe.db.sql(
         """
-                    SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.donor,donor.old_donor_id 
-                    FROM `tabDonation Receipt` tdr
-                    JOIN `tabDhananjaya Import Settings Company` tdis
-                    ON tdr.company = tdis.company
-                    JOIN `tabDonor` donor
-                    ON donor.name = tdr.donor
-                    WHERE 1
-                    """,
+					SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.donor,donor.old_donor_id 
+					FROM `tabDonation Receipt` tdr
+					JOIN `tabDhananjaya Import Settings Company` tdis
+					ON tdr.company = tdis.company
+					JOIN `tabDonor` donor
+					ON donor.name = tdr.donor
+					WHERE 1
+					""",
         as_dict=1,
     ):
         i += 1
@@ -411,12 +538,12 @@ def set_proper_patrons():
     i = 0
     for d in frappe.db.sql(
         """
-                SELECT old_patron_id,GROUP_CONCAT(JSON_OBJECT('name',name,'full_name',full_name,'old_trust_code',old_trust_code)) as names
-                FROM `tabPatron` 
-                WHERE 1
-                GROUP BY old_patron_id 
-                HAVING count(*) > 1
-                    """,
+				SELECT old_patron_id,GROUP_CONCAT(JSON_OBJECT('name',name,'full_name',full_name,'old_trust_code',old_trust_code)) as names
+				FROM `tabPatron` 
+				WHERE 1
+				GROUP BY old_patron_id 
+				HAVING count(*) > 1
+					""",
         as_dict=1,
     ):
         i = i + 1
@@ -449,14 +576,14 @@ def set_proper_patrons():
     i = 0
     for receipt in frappe.db.sql(
         """
-                    SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.patron,patron.old_patron_id 
-                    FROM `tabDonation Receipt` tdr
-                    JOIN `tabDhananjaya Import Settings Company` tdis
-                    ON tdr.company = tdis.company
-                    JOIN `tabPatron` patron
-                    ON patron.name = tdr.patron
-                    WHERE 1
-                    """,
+					SELECT tdr.name,tdr.company,tdis.old_trust_code,tdr.patron,patron.old_patron_id 
+					FROM `tabDonation Receipt` tdr
+					JOIN `tabDhananjaya Import Settings Company` tdis
+					ON tdr.company = tdis.company
+					JOIN `tabPatron` patron
+					ON patron.name = tdr.patron
+					WHERE 1
+					""",
         as_dict=1,
     ):
         i += 1
