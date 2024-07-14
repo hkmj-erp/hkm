@@ -20,7 +20,7 @@ def attach_image_to_doc():
 
     doc = frappe.get_doc(data["doctype"], data["name"])
 
-    if doc.get(docfield) is not None:
+    if doc.get(docfield):
         images = frappe.get_all(
             "File",
             filters={"attached_to_name": data["name"], "attached_to_field": docfield},
@@ -28,6 +28,7 @@ def attach_image_to_doc():
         )
         if len(images) > 0:
             frappe.delete_doc("File", images[0], ignore_permissions=True)
+            frappe.db.commit()
 
     files = frappe.request.files
 
@@ -65,17 +66,19 @@ def attach_image_to_doc():
                 "content": content,
             }
         ).save(ignore_permissions=1)
+        frappe.db.commit()
         doc.set(docfield, image_doc.file_url)
+    doc.reload()
     doc.save()
 
 
-def folder_exists(folder_name):
-    folder_name_parts = folder_name.split("/")
-
+def folder_exists(folder_path):
+    folder_name_parts = folder_path.split("/")
     if len(folder_name_parts) == 0:
         return True
-    file_name = folder_name_parts[1]
-    folders = frappe.get_all("File", filters={"is_folder": 1, "file_name": file_name})
+
+    folder_name = folder_name_parts[1]
+    folders = frappe.get_all("File", filters={"is_folder": 1, "file_name": folder_name})
     if len(folders) > 0:
         return True
     else:
