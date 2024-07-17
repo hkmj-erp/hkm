@@ -1,3 +1,6 @@
+from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
+    make_dimension_in_accounting_doctypes,
+)
 import frappe, click
 
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
@@ -17,6 +20,7 @@ def after_install():
         else:
             CUSTOM_FIELDS[doctype]["is_system_generated"] = 1
     create_custom_fields(CUSTOM_FIELDS, update=True)
+    create_accounting_dimension_fields()
     make_custom_records()
 
 
@@ -73,3 +77,16 @@ def delete_custom_fields(custom_fields):
             )
 
             frappe.clear_cache(doctype=doctype)
+
+
+def create_accounting_dimension_fields():
+    click.secho("Installing Accounting Dimensions", fg="yellow")
+    doctypes = frappe.get_hooks(
+        "accounting_dimension_doctypes",
+        app_name="hkm",
+    )
+
+    dimensions = frappe.get_all("Accounting Dimension", pluck="name")
+    for dimension in dimensions:
+        doc = frappe.get_doc("Accounting Dimension", dimension)
+        make_dimension_in_accounting_doctypes(doc, doctypes)

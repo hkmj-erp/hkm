@@ -4,6 +4,7 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 
 
 relevant_documents = [
+    "Material Request",
     "Purchase Order",
     "Purchase Invoice",
     "Sales Invoice",

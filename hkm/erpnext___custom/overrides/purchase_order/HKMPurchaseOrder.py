@@ -1,4 +1,7 @@
-from hkm.erpnext___custom.overrides.purchase_order.alm import assign_and_notify_next_authority, get_alm_level
+from hkm.erpnext___custom.overrides.purchase_order.alm import (
+    assign_and_notify_next_authority,
+    get_alm_level,
+)
 from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder
 import frappe, re
 from hkm.erpnext___custom.extend.accounts_controller import validate_gst_entry
@@ -11,6 +14,7 @@ from frappe.utils.background_jobs import enqueue
 from frappe.workflow.doctype.workflow_action.workflow_action import (
     get_doc_workflow_state,
 )
+
 # from hkm.erpnext___custom.po_approval.po_workflow_trigger import check_alm
 
 
@@ -21,12 +25,13 @@ class HKMPurchaseOrder(PurchaseOrder):
     def before_save(self):
         # super().before_save() #Since there is no before_insert in parent
         validate_gst_entry(self)
+        self.update_extra_description_from_mrn()
         self.refresh_alm()
 
     def on_update(self):
         super().on_update()
         assign_and_notify_next_authority(self)
-    
+
     def refresh_alm(self):
         if hasattr(self, "department") and self.department == "":
             frappe.throw("Department is not set.")
@@ -37,12 +42,11 @@ class HKMPurchaseOrder(PurchaseOrder):
             self.final_approving_authority = alm_level.final_approver
         else:
             frappe.throw("ALM Levels are not set for this ALM Center in this document")
-    
+
     def validate(self):
         super().validate()
         check_items_are_not_from_template(self)
         validate_work_order_item(self)
-        self.update_extra_description_from_mrn()
         self.validate_mrn_availble()
         return
 
@@ -57,8 +61,10 @@ class HKMPurchaseOrder(PurchaseOrder):
         for mrn in mrns:
             if mrn is not None:
                 mrn_doc = frappe.get_doc("Material Request", mrn)
-                if mrn_doc.description is not None:
-                    descriptions.append(mrn_doc.purpose + "\n" + mrn_doc.description)
+                if mrn_doc.purpose:
+                    descriptions.append(mrn_doc.purpose + "\n")
+                if mrn_doc.description:
+                    descriptions.append(mrn_doc.description + "\n")
         description = ", ".join(descriptions)
         if self.extra_description == None or self.extra_description.strip() == "":
             self.extra_description = description
@@ -100,4 +106,3 @@ class HKMPurchaseOrder(PurchaseOrder):
                     )
                 )
         return
-
