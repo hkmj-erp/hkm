@@ -119,7 +119,6 @@ permission_query_conditions = {
 # }
 override_doctype_class = {
     "POS Invoice": "hkm.erpnext___custom.overrides.HKMPOSInvoice.HKMPOSInvoice",
-    "POS Closing Entry": "hkm.erpnext___custom.overrides.HKMPOSClosingEntry.HKMPOSClosingEntry",
     "Sales Invoice": "hkm.erpnext___custom.overrides.HKMSalesInvoice.HKMSalesInvoice",
     "Journal Entry": "hkm.erpnext___custom.overrides.HKMJournalEntry.HKMJournalEntry",
     "Material Request": "hkm.erpnext___custom.overrides.HKMMaterialRequest.HKMMaterialRequest",
@@ -168,6 +167,9 @@ doc_events = {
     },
     "Payment Entry": {
         "on_submit": "hkm.erpnext___custom.extend.payment_entry.on_submit"
+    },
+    "POS Closing Entry": {
+        "validate": "hkm.erpnext___custom.extend.pos_closing_entry.validate"
     },
 }
 # Scheduled Tasks

@@ -30,6 +30,20 @@ CUSTOM_FIELDS = {
             "read_only": 1,
             "in_standard_filter": 1,
         },
+        {
+            "dt": "Purchase Invoice",
+            "fieldtype": "Tab Break",
+            "label": "Auditing",
+            "fieldname": "auditing_tab",
+            "insert_after": "supplied_items",
+        },
+        {
+            "dt": "Purchase Invoice",
+            "fieldtype": "HTML",
+            "label": "Documents Map",
+            "fieldname": "documents_map_html",
+            "insert_after": "auditing_tab",
+        },
     ],
     "Material Request Item": [
         {

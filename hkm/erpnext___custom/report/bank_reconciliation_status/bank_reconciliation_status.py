@@ -37,8 +37,8 @@ def execute(filters=None):
         # - flt(total_debit)
         # + flt(total_credit)
         + amounts_not_reflected_in_system
-        - flt(bank_tx_debit)
-        + flt(bank_tx_credit)
+        + flt(bank_tx_debit)
+        - flt(bank_tx_credit)
     )
 
     data += [
@@ -123,7 +123,9 @@ def get_amounts_from_bank_transactions(filters):
     )
     s = frappe.db.sql(
         f"""
-			SELECT SUM(deposit) as debit, SUM(withdrawal) as credit
+			SELECT 
+                SUM(IF(deposit > 0, unallocated_amount,0)) as debit,
+                SUM(IF(withdrawal > 0, unallocated_amount,0)) as credit
 			FROM `tabBank Transaction`
 			WHERE 
             	status = 'Unreconciled' 

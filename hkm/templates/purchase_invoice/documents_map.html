@@ -1,0 +1,174 @@
+<style>
+  .flex-container {
+    display: flex;
+    background-color: rgb(22, 0, 46);
+    border-radius: 10px;
+    margin-bottom: 5px;
+    justify-content: space-between;
+  }
+
+  .flex-container > div {
+    background-color: #ffffff;
+    width: max-content;
+    margin-inline: 3px;
+    margin-block: 3px;
+    padding: 10px;
+    border-radius: 10px;
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+</style>
+
+<div>
+  <h5 class="text-left indicator-pill blue no-indicator-dot">
+    Purchase Receipts
+  </h5>
+
+  {% for index,row in enumerate(purchase_receipts) %}
+
+  <div class="flex-container">
+    <div>
+      <h6 style="font-weight: 700">Info</h6>
+      <a target="_blank" href="/{{row.doctype}}/{{row.name}}"
+        ><h5>{{row.name}}</h5></a
+      >
+      <h6 style="font-weight: 700">
+        [ {{row.posting_date.strftime('%d %b %Y')}} ][ ₹
+        {{frappe.utils.fmt_money(row.grand_total)}} ]
+      </h6>
+    </div>
+    <div>
+      <h6 style="font-weight: 700">Approvers</h6>
+      <p>
+        <span>Creator</span> :
+        <span style="font-weight: 500">{{row.owner}} </span>
+      </p>
+    </div>
+    <div>
+      <h6 style="font-weight: 700">Items</h6>
+      {% set items = row['items'] %} {% for itemidx, item in enumerate(items) %}
+      {% if itemidx < 5%}
+      <p>
+        {{item['item_name'] }} ({{item['qty'] }} {{item['uom'] }}) {% endif%}
+      </p>
+      {% endfor %} {% if items|length > 5 %}... {% endif %}
+    </div>
+    <div>
+      <h6 style="font-weight: 700">Attachments</h6>
+      {% set attachments = row['attachments']%} {% for at in attachments %}
+      <p>
+        <a target="_blank" href="{{at['file_url']}}">{{at['file_name']}}</a>
+      </p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+  <br />
+  <h5 class="text-left indicator-pill blue no-indicator-dot">
+    Purchase Orders
+  </h5>
+
+  {% for index,row in enumerate(purchase_orders) %}
+
+  <div class="flex-container">
+    <div>
+      <h6 style="font-weight: 700">Info</h6>
+      <a target="_blank" href="/{{row.doctype}}/{{row.name}}"
+        ><h5>{{row.name}}</h5></a
+      >
+      <h6 style="font-weight: 700">
+        [ {{row.transaction_date.strftime('%d %b %Y')}} ][ ₹
+        {{frappe.utils.fmt_money(row.grand_total)}} ]
+      </h6>
+      <p>{{row.extra_description}}</p>
+    </div>
+    <div>
+      <h6 style="font-weight: 700">Approvers</h6>
+      <p>
+        <span>Creator</span> :
+        <span style="font-weight: 500">{{row.owner}} </span>
+      </p>
+      {% if row.recommended_by%}
+      <p>
+        <span>Recommender</span> :
+        <span style="font-weight: 500">{{row.recommended_by}} </span>
+      </p>
+      {% endif %} {% if row.first_approving_authority%}
+      <p>
+        <span>First</span> :
+        <span style="font-weight: 500">{{row.first_approving_authority}} </span>
+      </p>
+      {% endif %} {% if row.final_approving_authority%}
+      <p>
+        <span>Final</span> :
+        <span style="font-weight: 500">{{row.final_approving_authority}} </span>
+      </p>
+      {% endif %}
+    </div>
+    <div>
+      <h6 style="font-weight: 700">Items</h6>
+      {% set items = row['items'] %} {% for itemidx, item in enumerate(items) %}
+      {% if itemidx < 5%}
+      <p>
+        {{item['item_name'] }} ({{item['qty'] }} {{item['uom'] }}) {% endif%}
+      </p>
+      {% endfor %} {% if items|length > 5 %}... {% endif %}
+    </div>
+    <div>
+      <h6 style="font-weight: 700">Attachments</h6>
+      {% set attachments = row['attachments']%} {% for at in attachments %}
+      <p>
+        <a target="_blank" href="{{at['file_url']}}">{{at['file_name']}}</a>
+      </p>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% endfor %}
+
+  <br />
+  <h5 class="text-left indicator-pill blue no-indicator-dot">
+    Material Requests
+  </h5>
+
+  {% for index,row in enumerate(material_requests) %}
+
+  <div class="flex-container">
+    <div>
+      <h6 style="font-weight: 700">Info</h6>
+      <a target="_blank" href="/{{row.doctype}}/{{row.name}}"
+        ><h5>{{row.name}}</h5></a
+      >
+      <h6 style="font-weight: 700">
+        [ {{row.transaction_date.strftime('%d %b %Y')}} ]
+      </h6>
+      <h6 style="font-weight: 700">Purpose : {{row.purpose}}</h6>
+      <p>Description : {{row.description}}</p>
+    </div>
+    <div>
+      <h6 style="font-weight: 700">Approvers</h6>
+      <p>
+        <span>Creator</span> :
+        <span style="font-weight: 500">{{row.owner}} </span>
+      </p>
+    </div>
+    <div>
+      <h6 style="font-weight: 700">Items</h6>
+      {% set items = row['items'] %} {% for itemidx, item in enumerate(items) %}
+      {% if itemidx < 5%}
+      <p>
+        {{item['item_name'] }} ({{item['qty'] }} {{item['uom'] }}) {% endif%}
+      </p>
+      {% endfor %} {% if items|length > 5 %}... {% endif %}
+    </div>
+    <div>
+      <h6 style="font-weight: 700">Attachments</h6>
+      {% set attachments = row['attachments']%} {% for at in attachments %}
+      <p>
+        <a target="_blank" href="{{at['file_url']}}">{{at['file_name']}}</a>
+      </p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>

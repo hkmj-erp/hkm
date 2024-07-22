@@ -1,4 +1,20 @@
 frappe.ui.form.on("Purchase Invoice", {
+  refresh: function (frm) {
+    if (frm.doc.docstatus === 1) {
+      frappe.call({
+        method:
+          "hkm.erpnext___custom.overrides.HKMPurchaseInvoice.get_documents_map_data",
+        args: {
+          document: frm.doc.name,
+        },
+        callback: function (r) {
+          if (!r.exc) {
+            frm.set_df_property("documents_map_html", "options", r.message);
+          }
+        },
+      });
+    }
+  },
   onload: function (frm) {
     frm.set_query("default_difference_account", function () {
       return {

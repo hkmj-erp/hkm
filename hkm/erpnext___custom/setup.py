@@ -21,7 +21,7 @@ def after_install():
             CUSTOM_FIELDS[doctype]["is_system_generated"] = 1
     create_custom_fields(CUSTOM_FIELDS, update=True)
     create_accounting_dimension_fields()
-    make_custom_records()
+    # make_custom_records()
 
 
 def make_custom_records():

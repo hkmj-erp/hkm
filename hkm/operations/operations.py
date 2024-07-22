@@ -15,12 +15,141 @@ from erpnext.accounts.utils import get_balance_on
 import frappe
 from datetime import date
 from frappe import enqueue
-from frappe.utils.data import nowdate
+from frappe.utils.data import flt, nowdate
 from frappe.utils.nestedset import NestedSetChildExistsError, get_descendants_of
 from frappe.utils import add_to_date, now
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 import calendar, time
+
+
+def set_brs():
+    for je in frappe.db.sql(
+        """
+                SELECT tje.name as number, tje.reversal_of
+                FROM `tabJournal Entry` tje
+                JOIN `tabJournal Entry Account` tjea
+                    ON tjea.parent = tje.name
+                WHERE tjea.account = '1781220613087427 - AU Small; Finance Bank Ltd. - HKMJ'
+                    AND tje.posting_date <= '2022-05-01'
+                    AND tje.reversal_of IS NOT NULL
+                    AND tje.clearance_date IS NULL
+                """,
+        as_dict=1,
+    ):
+        reversal_doc = frappe.get_doc("Journal Entry", je["number"])
+        original_doc = frappe.get_doc("Journal Entry", je["reversal_of"])
+        if (not (original_doc.clearance_date)) and (not (reversal_doc.clearance_date)):
+            frappe.db.set_value(
+                "Journal Entry",
+                original_doc.name,
+                "clearance_date",
+                original_doc.posting_date,
+            )
+            frappe.db.set_value(
+                "Journal Entry",
+                reversal_doc.name,
+                "clearance_date",
+                original_doc.posting_date,
+            )
+        frappe.db.commit()
+
+
+def set_brs2():
+    for je in frappe.db.sql(
+        """
+                SELECT tje.name as number, tje.cheque_no, tje.cheque_date, tje.total_debit
+                FROM `tabJournal Entry` tje
+                JOIN `tabJournal Entry Account` tjea
+                    ON tjea.parent = tje.name
+                WHERE tjea.account = '1781220613087427 - AU Small; Finance Bank Ltd. - HKMJ'
+                    AND tje.posting_date <= '2022-05-01'
+                    AND tje.clearance_date IS NULL
+                    AND tje.docstatus = 1
+                """,
+        as_dict=1,
+    ):
+        reversal_doc = frappe.get_doc("Journal Entry", je["number"])
+        original_docs = frappe.get_all(
+            "Journal Entry",
+            filters={
+                "clearance_date": ["is", "not set"],
+                "cheque_no": je["cheque_no"],
+                "cheque_date": je["cheque_date"],
+                "total_debit": je["total_debit"],
+                "name": ["!=", je["number"]],
+                "docstatus": 1,
+            },
+            pluck="name",
+        )
+        if len(original_docs) == 1:
+            print(f"Matched  : {reversal_doc.name} with {original_docs[0]}")
+        # if (not (original_doc.clearance_date)) and (not (reversal_doc.clearance_date)):
+        #     frappe.db.set_value("Journal Entry",original_doc.name,"clearance_date",original_doc.posting_date)
+        #     frappe.db.set_value("Journal Entry",reversal_doc.name,"clearance_date",original_doc.posting_date)
+        # frappe.db.commit()
+
+
+def operation_against_account():
+
+    jes = frappe.get_all(
+        "Journal Entry",
+        filters={"donation_receipt": ["is", "set"]},
+        pluck="name",
+        # page_length=5,
+    )
+    length = len(jes)
+    for idx, je in enumerate(jes):
+        print(f"Processing {idx+1}/{length}")
+        set_against_account(je)
+
+
+def set_against_account(docname):
+    doc = frappe.get_doc("Journal Entry", docname)
+
+    accounts_debited, accounts_credited = [], []
+
+    for d in doc.get("accounts"):
+        if flt(d.debit) > 0:
+            accounts_debited.append(d.party or d.account)
+        if flt(d.credit) > 0:
+            accounts_credited.append(d.party or d.account)
+
+    accounts_map = {}
+
+    for d in doc.get("accounts"):
+        if d.against_account:
+            return
+        if flt(d.debit) > 0:
+            against_account = ", ".join(list(set(accounts_credited)))
+        if flt(d.credit) > 0:
+            against_account = ", ".join(list(set(accounts_debited)))
+
+        if d.account in accounts_map:
+            frappe.throw(f"The Account {d.account} might be duplicate in {docname}")
+
+        accounts_map.setdefault(d.account, against_account)
+        frappe.db.set_value(
+            "Journal Entry Account",
+            d.name,
+            "against_account",
+            against_account,
+            # update_modified=False,
+        )
+
+    for gl in frappe.get_all(
+        "GL Entry",
+        filters={"voucher_no": docname, "voucher_type": "Journal Entry"},
+        fields=["name", "account", "credit", "debit"],
+    ):
+        frappe.db.set_value(
+            "GL Entry",
+            gl["name"],
+            {"against": accounts_map[gl["account"]]},
+            # update_modified=False,
+        )
+
+    frappe.db.commit()
 
 
 def clean_account():
