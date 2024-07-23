@@ -66,6 +66,7 @@ def assign_and_notify_next_authority(doc):
         close_assignments(doc)
         assign_to_next_approving_authority(doc, user)
         mobile_no = frappe.get_value("User", user, "mobile_no")
+        frappe.errprint("Checking")
         if is_eligible_to_send_on_whatsapp(user, mobile_no):
             allowed_options = get_allowed_options(user, doc)
             send_whatsapp_approval(doc, user, mobile_no, allowed_options)

@@ -1,8 +1,6 @@
 from __future__ import unicode_literals
 from . import __version__ as app_version
-from hkm.erpnext___custom.doctype.user_company_allowed.list_view import (
-    get_applicable_documents,
-)
+
 from hkm.fixtures import custom_fixtures
 
 app_name = "hkm"
@@ -107,20 +105,6 @@ permission_query_conditions = {
     "DD Order": "hkm.divine_dishes.list_view_filter.query",
 }
 
-# For Company Filters for Particular Users
-documents = get_applicable_documents()
-
-permission_query_conditions.update(
-    dict.fromkeys(
-        documents, "hkm.erpnext___custom.doctype.user_company_allowed.list_view.query"
-    )
-)
-permission_query_conditions.update(
-    {
-        "Company": "hkm.erpnext___custom.doctype.user_company_allowed.list_view.company_specific"
-    }
-)
-
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
@@ -135,13 +119,13 @@ permission_query_conditions.update(
 # }
 override_doctype_class = {
     "POS Invoice": "hkm.erpnext___custom.overrides.HKMPOSInvoice.HKMPOSInvoice",
-    "POS Closing Entry": "hkm.erpnext___custom.overrides.HKMPOSClosingEntry.HKMPOSClosingEntry",
     "Sales Invoice": "hkm.erpnext___custom.overrides.HKMSalesInvoice.HKMSalesInvoice",
     "Journal Entry": "hkm.erpnext___custom.overrides.HKMJournalEntry.HKMJournalEntry",
     "Material Request": "hkm.erpnext___custom.overrides.HKMMaterialRequest.HKMMaterialRequest",
     "Purchase Order": "hkm.erpnext___custom.overrides.purchase_order.HKMPurchaseOrder.HKMPurchaseOrder",
     "Purchase Invoice": "hkm.erpnext___custom.overrides.HKMPurchaseInvoice.HKMPurchaseInvoice",
-    "Payment Entry": "hkm.erpnext___custom.overrides.HKMPaymentEntry.HKMPaymentEntry",
+    "Report": "hkm.erpnext___custom.overrides.HKMReport.HKMReport",
+    # "Payment Entry": "hkm.erpnext___custom.overrides.HKMPaymentEntry.HKMPaymentEntry",
 }
 
 # Document Events
@@ -152,7 +136,7 @@ doc_events = {
     "*": {
         "before_insert": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
         "before_cancel": "hkm.erpnext___custom.doctype.freeze_transaction_settings.freeze_transaction_settings.validate_transaction_against_frozen_date",
-        "before_save": "hkm.erpnext___custom.letterhead.letterhead_query",
+        "on_update": "hkm.hooks_extend.before_save",
     },
     "Task": {"on_update": "hkm.erpnext___custom.task_notification.query"},
     "Sales Invoice": {
@@ -180,6 +164,12 @@ doc_events = {
     },
     "Purchase Receipt": {
         "validate": "hkm.erpnext___custom.extend.purchase_receipt.validate",
+    },
+    "Payment Entry": {
+        "on_submit": "hkm.erpnext___custom.extend.payment_entry.on_submit"
+    },
+    "POS Closing Entry": {
+        "validate": "hkm.erpnext___custom.extend.pos_closing_entry.validate"
     },
 }
 # Scheduled Tasks
@@ -296,6 +286,8 @@ scheduler_events = {
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
 
+
+accounting_dimension_doctypes = ["Material Request"]
 
 # User Data Protection
 # --------------------

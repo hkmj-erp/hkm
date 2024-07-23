@@ -6,10 +6,9 @@
 custom_fixtures = [
     # "S3 Backup Settings",
     # "DFP External Storage",
-    # "DFP External Storage"
-    # "Sadhana Parameter",
-    # "SMS Settings"
-    # "DJ Receipt Format"
+    # # "Sadhana Parameter",
+    # "SMS Settings",
+    # "DJ Receipt Format",
     # "Workflow Action Master",
     # "Workflow State",
     # "Role",
@@ -22,10 +21,10 @@ custom_fixtures = [
     #             "in",
     #             [
     #                 "Donation Receipt",
-    #                 "Item Creation Request",
+    #                 # "Item Creation Request",
     #                 # "Supplier Creation Request",
     #                 # "Purchase Order",
-    #                 # "Donor ECS Creation Request",
+    #                 "Donor ECS Creation Request",
     #             ],
     #         ],
     #     ],
@@ -41,30 +40,28 @@ custom_fixtures = [
     #                 # "Purchase Order",
     #                 # "Purchase Receipt",
     #                 # "Purchase Invoice",
-    #                 # "Journal Entry",
+    #                 # "Sales Invoice",
+    #                 # "Stock Entry",
+    #                 "Payment Entry",
+    #                 "Journal Entry",
     #                 # "Customer",
-    #                 "Asset"
+    #                 # "Asset"
     #                 # "Supplier",
     #             ],
     #         ],
+    #         ["fieldname", "!=", "ka_head"],
     #     ],
     # },
-    # {
-    #     "dt": "Property Setter",
-    #     "filters": [
-    #         [
-    #             "doc_type",
-    #             "in",
-    #             [
-    #                 "Material Request",
-    #                 "Purchase Order",
-    #                 "Purchase Receipt",
-    #                 "Purchase Invoice",
-    #                 "Bank Transaction",
-    #             ],
-    #         ],
-    #     ],
-    # },
+    # # {
+    # #     "dt": "Property Setter",
+    # #     "filters": [
+    # #         [
+    # #             "doc_type",
+    # #             "in",
+    # #             ["Purchase Invoice", "Sales Invoice", "Stock Entry", "Payment Entry"],
+    # #         ],
+    # #     ],
+    # # },
     # {
     #     "dt": "Custom DocPerm",
     #     "filters": [
