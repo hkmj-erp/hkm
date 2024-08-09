@@ -22,6 +22,7 @@ class ITDevice(Document):
 		category: DF.Link | None
 		company: DF.Link
 		image: DF.AttachImage | None
+		it_user: DF.Link | None
 		location: DF.Data | None
 		model: DF.Data | None
 		naming_series: DF.Literal["ITD-.YY.-"]
@@ -29,7 +30,6 @@ class ITDevice(Document):
 		purchase_cost: DF.Currency
 		purchase_date: DF.Date | None
 		specifications: DF.Table[ITDeviceSpecification]
-		status: DF.Literal
-		user: DF.Data | None
+		status: DF.Literal[None]
 	# end: auto-generated types
 	pass

@@ -20,7 +20,7 @@
   "section_break_4",
   "specifications",
   "section_break_6",
-  "user",
+  "it_user",
   "password",
   "image",
   "column_break_rlfr",
@@ -125,11 +125,6 @@
    "label": "Password"
   },
   {
-   "fieldname": "user",
-   "fieldtype": "Data",
-   "label": "User"
-  },
-  {
    "fieldname": "purchase_cost",
    "fieldtype": "Currency",
    "label": "Purchase Cost"
@@ -138,12 +133,20 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status"
+  },
+  {
+   "fieldname": "it_user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "IT User",
+   "options": "IT User"
   }
  ],
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-11 15:19:51.106714",
+ "modified": "2024-07-26 00:08:30.751490",
  "modified_by": "Administrator",
  "module": "IT",
  "name": "IT Device",

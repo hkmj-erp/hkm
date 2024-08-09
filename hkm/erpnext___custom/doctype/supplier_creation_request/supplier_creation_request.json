@@ -8,19 +8,27 @@
  "engine": "InnoDB",
  "field_order": [
   "gstin",
-  "pan",
-  "aadhar_no",
   "supplier_name",
+  "mobile_number",
+  "column_break_irwm",
   "supplier_type",
   "supplier_group",
-  "mobile_number",
   "address_section",
   "address_line_1",
   "address_line_2",
   "city",
   "pincode",
+  "column_break_daui",
   "country",
-  "state"
+  "state",
+  "accounts_related_section",
+  "pan",
+  "aadhar_no",
+  "bank_account_details_column",
+  "bank",
+  "bank_branch_code",
+  "bank_account_name",
+  "bank_account_number"
  ],
  "fields": [
   {
@@ -123,11 +131,51 @@
    "fieldtype": "Data",
    "label": "Aadhar No",
    "mandatory_depends_on": "'ERP Coordinator' in frappe.get_roles(frappe.session.user)"
+  },
+  {
+   "fieldname": "column_break_irwm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_daui",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accounts_related_section",
+   "fieldtype": "Section Break",
+   "label": "Accounts Related"
+  },
+  {
+   "description": "This will be required at the time of payment.",
+   "fieldname": "bank_account_details_column",
+   "fieldtype": "Column Break",
+   "label": "Bank Account Details"
+  },
+  {
+   "fieldname": "bank_account_name",
+   "fieldtype": "Data",
+   "label": "Bank Account Name"
+  },
+  {
+   "fieldname": "bank_account_number",
+   "fieldtype": "Data",
+   "label": "Bank Account Number"
+  },
+  {
+   "fieldname": "bank_branch_code",
+   "fieldtype": "Data",
+   "label": "Bank Branch Code"
+  },
+  {
+   "fieldname": "bank",
+   "fieldtype": "Link",
+   "label": "Bank",
+   "options": "Bank"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-19 19:57:15.939946",
+ "modified": "2024-07-24 10:47:38.463525",
  "modified_by": "Administrator",
  "module": "ERPNext - Custom",
  "name": "Supplier Creation Request",

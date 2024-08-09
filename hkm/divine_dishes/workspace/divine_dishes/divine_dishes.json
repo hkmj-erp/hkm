@@ -91,12 +91,12 @@
    "type": "Link"
   }
  ],
- "modified": "2024-03-20 15:01:48.305551",
+ "modified": "2024-08-08 13:51:50.261273",
  "modified_by": "Administrator",
  "module": "Divine Dishes",
  "name": "Divine Dishes",
  "number_cards": [],
- "owner": "nrhd@hkm-group.org",
+ "owner": "nrhd@hkmjaipur.org",
  "parent_page": "HKM",
  "public": 1,
  "quick_lists": [],
@@ -105,7 +105,7 @@
    "role": "DD Manager"
   }
  ],
- "sequence_id": 9.0,
+ "sequence_id": 7.0,
  "shortcuts": [],
  "title": "Divine Dishes"
 }

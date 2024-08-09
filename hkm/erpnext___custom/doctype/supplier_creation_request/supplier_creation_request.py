@@ -7,6 +7,32 @@ from frappe.model.mapper import get_mapped_doc
 
 
 class SupplierCreationRequest(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        aadhar_no: DF.Data | None
+        address_line_1: DF.Data
+        address_line_2: DF.Data | None
+        bank: DF.Link | None
+        bank_account_name: DF.Data | None
+        bank_account_number: DF.Data | None
+        bank_branch_code: DF.Data | None
+        city: DF.Data
+        country: DF.Link
+        gstin: DF.Data | None
+        mobile_number: DF.Data | None
+        pan: DF.Data | None
+        pincode: DF.Data
+        state: DF.Literal["", "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", "Kerala", "Ladakh", "Lakshadweep Islands", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Other Territory", "Pondicherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"]
+        supplier_group: DF.Link
+        supplier_name: DF.Data
+        supplier_type: DF.Literal["Company", "Individual"]
+    # end: auto-generated types
     pass
 
 

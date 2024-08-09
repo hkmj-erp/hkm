@@ -19,7 +19,8 @@ def get_alm_level(doc):
     """
     Get ALM level for purchase order.
     """
-    amount_field = "rounded_total"
+    amount_field = "total"
+    # frappe.errprint(doc.as_dict())
     deciding_amount = getattr(doc, amount_field)
 
     for l in frappe.db.sql(
@@ -36,6 +37,7 @@ def get_alm_level(doc):
                     """,
         as_dict=1,
     ):
+        # frappe.errprint(f"{deciding_amount} {l.amount_condition}")
         if eval(f"{deciding_amount} {l.amount_condition}"):
             return l
     return None

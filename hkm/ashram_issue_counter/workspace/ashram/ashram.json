@@ -89,8 +89,8 @@
    "type": "Link"
   }
  ],
- "modified": "2024-03-27 19:17:44.006427",
- "modified_by": "nrhd@hkm-group.org",
+ "modified": "2024-08-08 13:51:50.353626",
+ "modified_by": "Administrator",
  "module": "Ashram Issue Counter",
  "name": "Ashram",
  "number_cards": [],
@@ -99,7 +99,7 @@
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 8.0,
+ "sequence_id": 9.0,
  "shortcuts": [
   {
    "color": "Green",

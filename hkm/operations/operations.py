@@ -23,6 +23,23 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 import calendar, time
 
 
+def set_it_user():
+    pass
+    # for v in frappe.get_all(
+    #     "Version",
+    #     filters={"ref_doctype": "IT Device", "creation": ["<=", "2024-06-01"]},
+    #     fields=["name", "data", "docname"],
+    # ):
+    #     data = json.loads(v["data"])
+    #     if "changed" in data:
+    #         for ch in data["changed"]:
+    #             if ch[0] == "it_user":
+    #                 print(v["docname"])
+    #                 print(ch)
+    #                 # frappe.db.set_value("IT Device",v["docname"],"it_user",ch[2])
+    # frappe.db.commit()
+
+
 def set_brs():
     for je in frappe.db.sql(
         """

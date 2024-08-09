@@ -145,7 +145,7 @@ doc_events = {
     },
     "Supplier": {
         "before_insert": "hkm.erpnext___custom.extend.supplier.creation_from_gstin",
-        "on_update": "hkm.erpnext___custom.extend.supplier.fetch_address_from_creation_request",
+        "on_update": "hkm.erpnext___custom.extend.supplier.update_data_from_supplier_creation_request",
     },
     "Item": {
         "before_insert": "hkm.erpnext___custom.extend.item.item_taxes_and_income_account_set",  # Before the document first time inserted, this will not run always whenever some changes are made to the document
